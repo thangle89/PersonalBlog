@@ -5,6 +5,7 @@ import Bio from "../components/bio"
 import Layout from "../components/layout"
 import SEO from "../components/seo"
 import { rhythm, scale } from "../utils/typography"
+import { Helmet }  from "react-helmet"
 
 const BlogPostTemplate = ({ data, pageContext, location }) => {
   const post = data.markdownRemark
@@ -13,6 +14,9 @@ const BlogPostTemplate = ({ data, pageContext, location }) => {
 
   return (
     <Layout location={location} title={siteTitle}>
+      <Helmet>
+        <script data-ad-client="ca-pub-8475674499647022" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+      </Helmet>
       <SEO
         title={post.frontmatter.title}
         description={post.frontmatter.description || post.excerpt}

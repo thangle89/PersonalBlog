@@ -48,17 +48,12 @@ const Layout = ({ location, title, children }) => {
     )
   }
   return (
-    <div style={{
-      display: 'flex'
-    }}>
-      <div style={{flex:1}}></div>
     <div
       style={{
         marginLeft: `auto`,
         marginRight: `auto`,
         maxWidth: rhythm(24),
         padding: `${rhythm(1.5)} ${rhythm(3 / 4)}`,
-        flex: 3
       }}
     >
       <header>{header}</header>
@@ -66,12 +61,6 @@ const Layout = ({ location, title, children }) => {
       <footer>
       <a target='blank' href='https://twitter.com/ThangLeQuoc'>Twitter</a> <a target="blank" href='https://www.linkedin.com/in/thang-le-a9695341'>LinkedIn</a>
       </footer>
-    </div>
-    <div style={{
-      flex: 1,
-    }}>
-      <script data-ad-client="ca-pub-8475674499647022" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-    </div>
     </div>
   )
 }
