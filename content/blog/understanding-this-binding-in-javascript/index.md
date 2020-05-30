@@ -235,7 +235,7 @@ Because environment object bind values for its scope where the `f1` function cre
 
 Most of the time, we just need to remember a simple rules: *`this` object is passed from the immediate environment where functions get executed, except when use `call`, `apply` or `bind`*. Functions can access to all variables where there are created thanks to *closure*.
 
-*Thanks [Bruno](https://www.linkedin.com/in/pongpolb) for doing technical review on the artical*
+*Thanks [Bruno](https://www.linkedin.com/in/pongpolb) for doing technical review on the article*
 
 ### References
 1: [Object Prototype](https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Objects/Object_prototypes)
