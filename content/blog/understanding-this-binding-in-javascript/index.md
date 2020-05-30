@@ -1,6 +1,6 @@
 ---
 title: Understanding `this` binding and closure in Javascript
-date: "2020-06-06T22:12:03.284Z"
+date: "2020-05-30T22:12:03.284Z"
 description: "Simple rules to undestand `this` binding with examples in React app"
 ---
 
@@ -234,6 +234,8 @@ Because environment object bind values for its scope where the `f1` function cre
 ### Conclusion
 
 Most of the time, we just need to remember a simple rules: *`this` object is passed from the immediate environment where functions get executed, except when use `call`, `apply` or `bind`*. Functions can access to all variables where there are created thanks to *closure*.
+
+*Thanks [Bruno](https://www.linkedin.com/in/pongpolb) for doing technical review on the artical*
 
 ### References
 1: [Object Prototype](https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Objects/Object_prototypes)
