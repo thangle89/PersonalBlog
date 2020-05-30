@@ -1,5 +1,5 @@
 ---
-title: Understanding `this` binding and closure in javascript
+title: Understanding `this` binding and closure in Javascript
 date: "2020-06-06T22:12:03.284Z"
 description: "Simple rules to undestand `this` binding with examples in React app"
 ---
@@ -16,19 +16,19 @@ stateDiagram-v2
         note left of ExecuteFunction : `this` object is binded from `env2`.
 -->
 
-**TL;DR** Every function in javascipt has an environment (env) object associate with it, `this` object in that environment is passed from the immediate environment if not using any of `call`, `apply` or `bind` functions
+**TL;DR** Every function in javascipt has an environment (env) object associates with it, `this` object in that environment is passed from the immediate environment if not using any of `call`, `apply` or `bind` functions
 
 ###Introduction
 
-At some point when learning the language, I think most people will be confused about the `this` object in javascript, let's see the following codes
-```javascript
+At some point when learning the language, I think most people will be confused about the `this` object in Javascript, let's see the following codes
+```js
 a.sum();``
 const temp = sum;
 temp();
 ```
-The outputs of `a.f()` and `temp()` can be unsuprisingly different, depend on the context of `this`. A more common case we can encounter if working in React applications is
+The outputs of `a.sum()` and `temp()` can be unsuprisingly different, depend on the context of `this`. A more common case we can encounter if working in React applications is
 
-```javascript
+```js
 class MyForm extends React.Component {
     constructor(){
         // something's missing
@@ -47,36 +47,35 @@ class MyForm extends React.Component {
     }
 }
 ```
-For the above code to work properly, we need to either have to write the constructor function 
+For the above code to work properly, we need to either write the constructor function as
 ```js
     constructor() {
         this.handleSubmit = this.handleSubmit.bind(this)
     }
 ```
-or using ES6 fat arrow function for `handlSubmit` 
+or using ES6 fat arrow function for `handleSubmit` 
 ```js
     handleSubmit = () => {
         this.setState({isSubmited: true});
     }
 ```
-To understand why it needs to bind `this` object, let's examine what happens when javascript engine execute functions or expressions.
+To understand why it needs to bind `this` object, let's examine what happens when Javascript engine execute functions or expressions.
 
-###Javascript execution context
+### Javascript execution context
 
-In javascript, functions are objects (ES6 classes are also functions, it's just the syntactic sugar for constructor function). After parse and 
-evaluate expressions in function, javascript binds all the values of arguments and creates an environment object that consists of `this` , `arguments`
-for that function.
+In Javascript, functions are objects (ES6 classes are also functions, it's just the syntactic sugar for constructor function). After parse and 
+evaluate expressions in function, Javascript binds all the values of arguments and creates an environment object that consists of `this` , `arguments` for that function.
 
 ```js
 var a = 1;
 function sum(b) { 
     return this.a + b; // env is created with b as variable
     };
-sum(2); // `this` object is binded from globale env
+sum(2); // `this` object is binded from global env
 //output: 3
 ```
 
-when `sum(2)` executed `this` is passed from immediate environment which is from global scope. Another example
+when `sum()` executed `this` is passed from immediate environment which is from global scope. Another example
 
 ```js
 var a = 1;
@@ -89,7 +88,7 @@ var myObj = {
 myObj.getValue();
 // output: 2
 ```
-Function `getValue` is executed on `myObj`, thus `this` object is `myObj`. However if we take only the function and execute in in the global environment.
+Function `getValue` is executed on `myObj`, thus `this` object is `myObj`. However if we take *only* the function and execute in in the global environment.
 
 ```js
 var a = 1;
@@ -103,7 +102,7 @@ const getVal = myObj.getValue;
 getVal();
 // output: 1
 ```
-This time, global's `this` is applied to the function and the output to console is `1`
+This time, global's `this` is applied to the function and the output to console is `1`. 
 
 ### Fat arrow function
 
@@ -123,7 +122,7 @@ myObj.getValue() //output: 1
 ```
 For fat arrow functions, `this` object is always passed from immediate environment where the function is created, *NOT* where it's executed. This quite subtle distinction is the main reason for most of the confusion about `this` object.  As we can see in the example where we use the arrow function for `getValue`, `this` from global context is binded to it, thus output for it is `1` in both cases.
 
-###`call`, `apply` and `bind`
+### `call`, `apply` and `bind`
 
 Javascript allow us to bind `this` context to a function by using `call`, `apply` or `bind`. Let's go back to the example that we have so far
 
@@ -151,11 +150,41 @@ As we can see, `bind` and `apply` allow us to attach a `this` context into a fun
 An interesting usage is when we use `bind` to attach `myObjC` as `this` for `getValue`. The result shows that
 a new function is created when we use `bind` on the original function, and the function also has `myObjC` included to it.
 
+### Javascript classes
+
+Javascript actually has no classes, if we use ES6 class syntax, it'd be compiled to constructor function
+
+```js
+class Person {
+    constructor(name) {
+        this.name = name;
+    }
+    getName(){
+        return this.name;
+    }
+}
+...
+// will be compiled as 
+...
+function Person(name) {
+    this.name = name;
+}
+Person.prototype.getName = function () {
+    return this.name;
+}
+...
+const personA = new Person('John');
+const personB = new Person('Peter');
+personA.getName(); // John
+personB.getName(); // Peter
+```
+When constructor functions called with `new`, a new object is created. That's why in classes or constructor functions, `this` always bind to different objects.
+
 Let's review the example with React component at the begining
-```javascript
+```js
 class MyForm extends React.Component {
     constructor(){
-        // something's missing
+        this.handleSubmit = this.handleSubmit.bind(this);
         this.state = {
             isSubmited: false,
         }
@@ -171,7 +200,7 @@ class MyForm extends React.Component {
     }
 }
 ```
-the reason `MyForm` component need to bind `this` object is because `handleSubmit` function will be passed to the rendered DOM in React in which the function will be executed on a different object, comppare to the component instance, so if it doesn't bind `this` object in `handleSubmit`, the function cannot access to state of `MyForm` component's instance. 
+When React render its components' tree, it will call the contructor function of `MyForm` component to create instance of the component and link it with an actual HTML DOM in document. The reason `MyForm` component need to bind `this` object is because `handleSubmit` function will be passed to the corresponding DOM in HTML page via `onSubmit={this.handleSubmit}`, in which the function will get called on a different object, compare to the component instance, so if it doesn't bind `this` object in `handleSubmit`, the function cannot access to state of `MyForm` component's instance. 
 
 ### Closure
 
@@ -200,8 +229,19 @@ const f = f1()();
 ...
 f(); //output: 3
 ```
-Because environment object bind values for its scope where the `f1` function created, so if later it run `f()`, the function is still be able to find the values of `a` and `b`. Binding of `this` object and *Closure* are two fundamental concepts in javascript.
+Because environment object bind values for its scope where the `f1` function created, so if later it run `f()`, the function is still be able to find the values of `a` and `b`. Binding of `this` object and *Closure* are two fundamental concepts in Javascript.
 
 ### Conclusion
 
 Most of the time, we just need to remember a simple rules: *`this` object is passed from the immediate environment where functions get executed, except when use `call`, `apply` or `bind`*. Functions can access to all variables where there are created thanks to *closure*.
+
+### References
+1: [Object Prototype](https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Objects/Object_prototypes)
+
+2: [Funtion apply](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/apply)
+
+3: [Function call](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/call)
+
+4: [Function bind](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/bind)
+
+5: [React rendering elements](https://reactjs.org/docs/rendering-elements.html)
