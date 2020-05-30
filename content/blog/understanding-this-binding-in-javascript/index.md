@@ -22,7 +22,7 @@ stateDiagram-v2
 
 At some point when learning the language, I think most people will be confused about the `this` object in Javascript, let's see the following codes
 ```js
-a.sum();``
+a.sum();
 const temp = sum;
 temp();
 ```
@@ -75,7 +75,7 @@ sum(2); // `this` object is binded from global env
 //output: 3
 ```
 
-when `sum()` executed `this` is passed from immediate environment which is from global scope. Another example
+when `sum()` get executed, `this` is passed from immediate environment which is from global scope. Another example
 
 ```js
 var a = 1;
@@ -229,11 +229,11 @@ const f = f1()();
 ...
 f(); //output: 3
 ```
-Because environment object bind values for its scope where the `f1` function created, so if later it run `f()`, the function is still be able to find the values of `a` and `b`. Binding of `this` object and *Closure* are two fundamental concepts in Javascript.
+Because environment object bind values for its scope where the `f1` function created, so if later it runs `f()`, the function can still be able to find the values of `a` and `b`. Binding of `this` object and *Closure* are two fundamental concepts in Javascript.
 
 ### Conclusion
 
-Most of the time, we just need to remember a simple rules: *`this` object is passed from the immediate environment where functions get executed, except when use `call`, `apply` or `bind`*. Functions can access to all variables where there are created thanks to *closure*.
+Most of the time, we just need to remember a simple rule: *`this` object is passed from the immediate environment where functions get executed, except when use `call`, `apply` or `bind`*. Functions can access to all variables where they are created thanks to *closure*.
 
 *Thanks [Bruno](https://www.linkedin.com/in/pongpolb) for doing technical review on the article*
 
