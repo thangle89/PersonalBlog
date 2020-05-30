@@ -23,7 +23,7 @@ stateDiagram-v2
 At some point when learning the language, I think most people will be confused about the `this` object in Javascript, let's see the following codes
 ```js
 a.sum();
-const temp = sum;
+const temp = a.sum;
 temp();
 ```
 The outputs of `a.sum()` and `temp()` can be unsuprisingly different, depend on the context of `this`. A more common case we can encounter if working in React applications is
