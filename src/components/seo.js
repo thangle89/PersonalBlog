@@ -55,7 +55,7 @@ const SEO = ({ description, lang, meta, title }) => {
         },
         {
           property: `og:image`,
-          content: '/tl.png',
+          content: 'https://thangledev.com/tl.png',
         },
         { 
           property: 'google-site-verification',
