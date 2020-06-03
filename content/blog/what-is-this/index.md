@@ -11,12 +11,12 @@ need to look for related insights. I am open for ideas and suggestions, so pleas
 
 **Why ads ?** 
 
-I include ads to increase incentive for myself and help me be more productive, having more income is always nice. I apologise if it annoys you.
+I include ads to increase incentive for myself and help me be more productive, having more income is always nice. I apologize if it annoys you.
 
 
 **About me**
 
-I am ThangLe, a software engineer, although I'd like to consider myself as a practisioner of software craftmanship. Since graduation, I've been
+I am ThangLe, a software engineer, although I'd like to consider myself as a practitioner of software craftsmanship. Since graduation, I've been
 working primarily with web development, my current company is Agoda, an online travel agency, where I work as a fullstack developer.
 
 My main interest is solving complex problems with simple and elegant solutions. I've become a big fan of functional programming and micro services.

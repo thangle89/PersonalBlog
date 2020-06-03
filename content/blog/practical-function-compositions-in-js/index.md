@@ -58,7 +58,7 @@ Now we have a dictionary of data that can be use easier because we can retrieve 
 
 ### Reducing functions
 
-In my first post about `this` and closure in JS, I mentioned that we can pass functions arround in JS applications. Then instead of data array, suppose that we have an array of functions and need to apply all the functions to a value 
+In my first post about `this` and closure in JS, I mentioned that we can pass functions around in JS applications. Then instead of data array, suppose that we have an array of functions and need to apply all the functions to a value 
 
 ```js
 const minus = (a) => a - 2;
@@ -82,7 +82,7 @@ const result = operations.reduceRight((acc, f) => {
     return f(acc);
 },1); 
 console.log(result); //output: 9
-console.log(minus(add(multiple(1)))) //ouptut: 9 = (1*10) + 1 - 2
+console.log(minus(add(multiple(1)))) //output: 9 = (1*10) + 1 - 2
 ```
 Notice that we don't have the final function like `calculate(x)` yet, what if we need to apply the list of functions to more values e.g. `calculate(1), calculate(3)... `? 
 
@@ -108,7 +108,7 @@ compose(minus,add)(1) //output 0
 ```
 What change now is `operations` is replaced by `fns` argument as the input for our utility function. Then `compose` function returns another function which will be applied with the list of `fns` argument when it executes. 
 
-The utility function `compose` can now be used with other list of functions easily. Infact,`compose` is so useful that many libraries have their own implementation for it e.g. [Underscore](https://devdocs.io/underscore/index#compose) or [Redux](https://redux.js.org/api/compose). If you work in React Redux app, the second form of function 
+The utility function `compose` can now be used with other list of functions easily. In fact,`compose` is so useful that many libraries have their own implementation for it e.g. [Underscore](https://devdocs.io/underscore/index#compose) or [Redux](https://redux.js.org/api/compose). If you work in React Redux app, the second form of function 
 ```js
 compose(minus,add)(1)
 ```
@@ -119,14 +119,14 @@ export default compose(
     React.memo,
     HOCWrapper1,
     HOCWrapper2,
-    connect(mapStateToProps, mapDispatchToProsp) //React-redux
+    connect(mapStateToProps, mapDispatchToProps) //React-redux
 )(MyComponent)
 
 // if don't use `compose`, we'd have to write
 export default React.memo(
     HOCWrapper1(
-        HOCWrappe2(
-            connect(mapStateToProps, mapDispatchToProsp)(MyComponent)
+        HOCWrapper2(
+            connect(mapStateToProps, mapDispatchToProps)(MyComponent)
             )))
 ```
 The first style is much cleaner to describe all the wrappers around the component. Notice that the order when apply the functions can produce different results
@@ -161,7 +161,7 @@ chargeCredit(10); // output: deduct balance: 10
 chargeCredit(5); // output: undefined
 ```
 
-As we can see, when calling function at the second time `chargeCredit(5)`, it returns `undefined` which is what we expected. In essense, what `once` does is just create a closure for the input function. Inside that closure, it can check whether the function is already executed. Things work well until we need to use `once` function on a method of an object. For example:
+As we can see, when calling function at the second time `chargeCredit(5)`, it returns `undefined` which is what we expected. Essentially, what `once` does is just create a closure for the input function. Inside that closure, it can check whether the function is already executed. Things work well until we need to use `once` function on a method of an object. For example:
 
 ```js
 const bankAccount = {
@@ -205,7 +205,7 @@ console.log(bankAccount.balance); //output: 40
 bankAccount.chargeCredit(10);
 console.log(bankAccount.balance); //output: 40
 ```
-It works properly now, the first call to `chargeCredit`, the balance is deducted by 10, when the second call to `chargeCredit`, the balance remains unchange. 
+It works properly now, the first call to `chargeCredit`, the balance is deducted by 10, when the second call to `chargeCredit`, the balance remains unchanged. 
 
 At this point, some of you might have question about `compose` and `once`, *why `once` function takes into account for `this` context when apply the function while `compose` does not*? 
 
@@ -214,7 +214,7 @@ If we look at function arguments of `compose`, we can see they are context agnos
 ```js
 const calculate = compose(objA.minus, objB.add, objC.multiple)
 ```
-then the new `calculate` function needs to be executed on another object, which doesn't have to be either `objA`, `objB` or `objC`. In constrast, `once` function accepts a function, thus it acts as a function decorator of the function argument. That function argument can be a method on an object or a pure function (functions that do not need to access `this` object). To make `once` function works for all cases, it must pass `this` context when executing.
+then the new `calculate` function needs to be executed on another object, which doesn't have to be either `objA`, `objB` or `objC`. In contrast, `once` function accepts a function, thus it acts as a function decorator of the function argument. That function argument can be a method on an object or a pure function (functions that do not need to access `this` object). To make `once` function works for all cases, it must pass `this` context when executing.
 
 ### Closure with objects
 
@@ -233,7 +233,7 @@ const memoize = (fn) => {
 }
 ```
 
-Similiar to `once`, the `memoize` function needs to handle input function and return another function with a wrapped closure. In the closure, it has an object to cache the results for the original function. Following example for using `memoize` with a function.
+Similar to `once`, the `memoize` function needs to handle input function and return another function with a wrapped closure. In the closure, it has an object to cache the results for the original function. Following example for using `memoize` with a function.
 
 ```js
 const longOperation = (value) => {
@@ -251,7 +251,7 @@ fastOperation(7); //output: operation executed 7
 ```
 The example shows that `fastOperation`, which is composed from `memoize(longOperation)` can cache its result for each input value when executing. The first time a value is applied e.g. `fastOperation(5)`, the function runs normally and cache the result, second time when call `fastOperation(5)` again, the function just return cached result immediately. 
 
-This `memoization` is quite helpful for improving performance in some cases, but we need to use it with a good consideration. For example in the serializing `key` of this implementation, it uses `JSON.stringify`, but if the array is big `JSON.stringify` can slow down the computation, and the memmory need to spend to cache results also increases. 
+This `memoization` is quite helpful for improving performance in some cases, but we need to use it with a good consideration. For example in the serializing `key` of this implementation, it uses `JSON.stringify`, but if the array is big `JSON.stringify` can slow down the computation, and the memory need to spend to cache results also increases. 
 
 Memoization technique is popular in recursive calculations e.g. fibonacci number. It can also be found in [React.memo](https://reactjs.org/docs/react-api.html#reactmemo) or [`Reselect`](https://github.com/reduxjs/reselect) library, which is quite common in React Redux app. 
 
@@ -336,9 +336,9 @@ const myAsync = new MyPromise((resolve, reject) => {
 })
 myAsync.then(value => console.log(value)); //output: Resolved 10
 ```
-*Note*: `MyPromise` is implemented based on my understanding of Promise in JS, for a complete implementation please refer to [Implementing JS](promisejs.org/implementing/), there are certaint differences, but the idea remains the same.
+*Note*: `MyPromise` is implemented based on my understanding of Promise in JS, for a complete implementation please refer to [Implementing JS](promisejs.org/implementing/), there are certain differences, but the idea remains the same.
 
-### Conclusion
+### Summary
 
 In this article, we went from some simple compositions of functions to Array `reduce`, from that we can build a utility `compose` which can combine many functions together. Moving to *closure*, examples show that we can use `closure` to create useful methods like `once` and `memoize`. Finally with the reverse engineering of `promises`, hopefully it can give you a clearer picture of how objects and functions in JS are used and constructed, at the atomic level, JS contains mostly `objects` and `functions`.
 
