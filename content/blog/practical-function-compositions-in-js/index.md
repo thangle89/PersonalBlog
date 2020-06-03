@@ -22,12 +22,12 @@ const numbers = [7,8,2,3,6];
 numbers.sort(orderAscending);
 console.log(numbers); //output: [2,3,6,7,8]
 ```
-With the same `numbers` array, what if we want to calculate the total of it? 
+With the same `numbers` array, what if we want to calculate the total of it? Array `reduce` can help us do that, it accept and reducer function and apply that function to every item in the array while also keep track of the accumulated result.
 ```js
 const totalReducer = (total, num) => total + num;
 console.log(numbers.reduce(totalReducer,0)) //output: 26
 ```
-`Reduce` has some others interesting usage, let's say we have a very big array of api data and want to transform it to a dictionary for faster access and update we can do
+`Reduce` has some others interesting usage, assume that we have a very big array of api data and want to transform it to a dictionary for faster access and update we can do
 ```js
 const data = [
     {id: 1, name: 'computer1', count: 3 },
@@ -36,7 +36,8 @@ const data = [
     {id: 4, name: 'computer4', count: 6 },
 ];
 const dictionary = data.reduce((acc, item) => {
-    acc[item.id] = item;
+    // loop through every item in array and add them into the dictionary
+    acc[item.id] = item; 
     return acc;
 }, {})
 console.log(dictionary);
@@ -53,7 +54,7 @@ Now we have a dictionary of data that can be use easier. As an exercise for you,
 
 ### Reducing functions
 
-If you read my first post about `this` and closure in JS, you know that we can pass functions arround in JS applications. Then instead of data array, what if we have an arrays of functions ? 
+If you read my first post about `this` and closure in JS, you know that we can pass functions arround in JS applications. Then instead of data array, what if we have an arrays of functions and need to apply all the functions to a value ? 
 
 ```js
 const add = (a) => a + 1;
@@ -70,20 +71,55 @@ to apply all the functions in `operations` to a number, instead of the imperativ
 ```js
 minus(add(multiple(1)))
 ```
-even though the two can yield the same result. At first attemp, we can try to use `reduce` to apply each functions to a value:
+even though the two can yield the same result. At first attemp to compose a single function, we can try to use `reduce` to apply each functions to a value:
 ```js
-const result = operations.reduceRight((acc, f) => {   
+const result = operations.reduceRight((acc, f) => { 
+    // reduceRight is similar to reduce, but it can keep the order from right to left  
     return f(acc);
 },1); 
-console.log(result) //output: 9
+console.log(result); //output: 9
 console.log(minus(add(multiple(1)))) //ouput: 9
 ```
 Notice that we don't have a final function like `calculate(x)` yet, what if we need to apply the list of functions to more values? A second attempt, instead of apply `f()` immediately, it needs to return a function
 
 ```js
+const calculate = operations.reduceRight((acc, f) => {   
+    return (value) => f(acc(value));
+});
+calculate(1); //output 9
+```
+Now we have a single function that composed from an array of functions. But in practise, we usually need to have an utility function that can be reuse for different arrays of functions. Let's get rid of the `operations`
+```js
+const compose = (...fns) => {
+    return (value) => {
+        return fns.reduceRight((acc,fn) => fn(acc), value)
+    }
+}
+// Now we can write calculate function as 
+const calculate = compose(minus,add,multiple);
+calculate(1): //output 9
+compose(minus,add)(1) //output 0
 ```
 
-    -example in React - redux
+The utility function `compose` now can be re-used with other functions. Infact,`compose` is so useful that many library has their own implementation for it like [Underscore](https://devdocs.io/underscore/index#compose) or [Redux](https://redux.js.org/api/compose). If you work in React Redux app, the second form of function `compose(minus,add)(1)` can be familiar to you. If we have a React component that has many Higher-Order Component (HOC) wrappers, we can use `compose` to have a concise structure
+
+```js
+export default compose(
+    React.memo,
+    HOCWrapper1,
+    HOCWrapper2,
+    connect(mapStateToProps, mapDispatchToProsp)
+)(MyComponent)
+
+// if don't use compose we have to write
+export default React.memo(HOCWrapper1(HOCWrappe2(connect(mapStateToProps, mapDispatchToProsp)(MyComponent))))
+```
+The first style is much cleaner to describe all the wrappers around the component. 
+
+### Closure in functional composition
+
+
+
 Promises
 -reverse engineer 
 
