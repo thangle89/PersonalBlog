@@ -7,11 +7,11 @@ description: "Some information about me and why I started this blog"
 **What is this blog for?**
 
 I build this site mainly to consolidate my knowlege in software development and hopefully it can help people sometimes when they 
-need to look for related insights. I am open for ideas and suggestions, so please reach out me on <a target='blank' href='https://twitter.com/ThangLeQuoc'>Twitter</a> or <a target="blank" href='https://www.linkedin.com/in/thang-le-a9695341'>LinkedIn</a>
+need to look for related insights. I am open for ideas and suggestions, please reach out me on <a target='blank' href='https://twitter.com/ThangLeQuoc'>Twitter</a> or <a target="blank" href='https://www.linkedin.com/in/thang-le-a9695341'>LinkedIn</a>
 
-**Why ads ?** 
+<!-- **Why ads ?** 
 
-I include ads to increase incentive for myself and help me be more productive, having more income is always nice. I apologize if it annoys you.
+I include ads to increase incentive for myself and help me be more productive, having more income is always nice. I apologize if it annoys you. -->
 
 
 **About me**
