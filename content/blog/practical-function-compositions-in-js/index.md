@@ -6,7 +6,7 @@ description: "A step by step guide that shows how functions and objects are used
 
 To work with Javascript(JS) effectively, you need to get used to the way functions are composed in the language. When I started learning JS, my background in C# made it a bit difficult to understand the way functions are passed around in JS applications. I hope this guide can ease the way for you. 
 
-In this article, I will walk you throught some basic examples of composing functions, then describe the common use cases of those functions. At the end, to get you familiar with objects and functions in JS, we will try to implement a basic version of `Promises`.  
+In this article, I will walk you through some basic examples of composing functions, then describe the common use cases of those functions. At the end, to get you familiar with objects and functions in JS, we will try to implement a basic version of `Promises`.  
 
 ### Definition
 
@@ -17,14 +17,14 @@ It's quite easy to understand when functions have normal values like objects or 
 
 ### Array `sort`, `reduce`
 
-Arrary methods in JS like: `reduce` or `sort` are very common for manipulating data. They accept a function as argument and then apply the function to the array. Following is an example with `sort`
+Array methods in JS like: `reduce` or `sort` are very common for manipulating data. They accept a function as argument and then apply the function to the array. Following is an example with `sort`
 ```js
 const orderAscending = (a,b) => a - b;
 const numbers = [7,8,2,3,6];
 numbers.sort(orderAscending);
 console.log(numbers); //output: [2,3,6,7,8]
 ```
-`sort` uses a comparer function to compare two values of the array, this comparer can return only `(1,-1,0)`. `Zero` is equal,`-1` means `a` is less than `b`,and conversely `1` means `a` is greater than `b`. By this api, we can change the comparer into descending by just switch the order variables being compared `orderDescending = (a,b) => b - a`.
+`sort` uses a comparer function to compare two values of the array, this comparer can return only `(1,-1,0)`. `Zero` is equal,`-1` means `a` is less than `b`, and conversely `1` means `a` is greater than `b`. By this api, we can change the comparer into descending by just switch the order variables being compared `orderDescending = (a,b) => b - a`.
 
 With the same `numbers` array, assume that we want to calculate the total for it. Array `reduce` can help us do that, it accepts a reducer function and apply that function to every item in the array while also keep track of the accumulated result.
 ```js
@@ -90,7 +90,7 @@ const calculate = operations.reduceRight((acc, f) => {
 });
 calculate(1); //output 9
 ```
-Now we have a single function that composed from an array of functions. Then at final step, we can remove the intermediate `operations` and create an utility function that can be re-used for different arrays of functions.
+Now we have a single function that composed from an array of functions. Then at final step, we can remove the intermediate `operations` and create a utility function that can be re-used for different arrays of functions.
 ```js
 const compose = (...fns) => { //fns replaces `operations` array
     return (value) => {
