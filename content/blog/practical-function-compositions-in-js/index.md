@@ -1,7 +1,7 @@
 ---
 title: Practical function compositions in Javascript
-date: "2020-06-07T22:12:03.284Z"
-description: "A step by step guide to function composition in JS"
+date: "2020-06-06T22:12:03.284Z"
+description: "A step by step guide that shows how functions and objects are used in JS, with examples of building common functions and object such as `compose`, `once`, `memoize` and `Promise`"
 ---
 
 To work with Javascript(JS) effectively, you need to get used to the way functions are composed in the language. When I started learning JS, my background in C# made it a bit difficult to understand the way functions are passed around in JS applications. I hope this guide can ease the way for you. 
