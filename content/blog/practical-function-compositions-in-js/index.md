@@ -6,16 +6,18 @@ description: "A step by step guide to function composition in JS"
 
 To work with Javascript(JS) effectively, you need to get used to the way functions are composed in the language. When I started learning JS, my background in C# made it a bit difficult to understand the way functions are passed around in JS applications. I hope this guide can ease the way for you. 
 
+In this article, I will walk you throught some basic examples of composing functions, then describe the common use cases of those functions. At the end, to get you familiar with objects and functions in JS, we will try to implement a basic version of `Promises`.  
+
 ### Definition
 
 A definition from mathematics for function composition (wikipedia)
 > Function composition is an operation that takes two functions `f` and `g` and produces a function `h` such that `h(x) = g(f(x))`. In this operation the function `g` is applied to the result of applying the function `f` to `x`.
 
-It's quite easy to understand when functions have normal values like objects or numbers as arguments e.g. `f(1)` or `g(1)`, things get more complicated when we need to compose new functions from multiple functional arguments.
+It's quite easy to understand when functions have normal values like objects or numbers as arguments e.g. `f(1)` or `g(1)`, things get more complicated when they have functions as arguments. Let's start with some simple examples before moving into composing functions.
 
 ### Array `sort`, `reduce`
 
-Some simple methods in JS like: `reduce` or `sort` are very common for manipulating array. They accept a function as argument and then apply the function to the array. Following is an example with `sort`
+Arrary methods in JS like: `reduce` or `sort` are very common for manipulating data. They accept a function as argument and then apply the function to the array. Following is an example with `sort`
 ```js
 const orderAscending = (a,b) => a - b;
 const numbers = [7,8,2,3,6];
@@ -29,7 +31,7 @@ With the same `numbers` array, assume that we want to calculate the total for it
 const totalReducer = (total, num) => total + num;
 console.log(numbers.reduce(totalReducer,0)) //output: 26
 ```
-`Reduce` has some others interesting usages, suppose that we have a very big array, which contains some API data that we need to transform to a dictionary for faster access and update of the data. We can revise the reducer function to achieve that as: 
+`Reduce` has some others interesting usages, suppose that we have a very big array, which contains some API data that we need to transform to a dictionary for faster access and update. We can revise the reducer function to achieve that as: 
 ```js
 const data = [
     {id: 1, name: 'product 1', count: 3 },
@@ -54,7 +56,7 @@ console.log(dictionary);
     ...
 }
 ```
-Now we have a dictionary of data that can be use easier because we can retrieve an element by its index such as `dictionary[2]`. As an exercise for you, what if we want to convert `dictionary` back to an array of data again? (*hint* use `Object.keys` and `reduce`)
+Now we have the dictionary object that can be used easier because we can retrieve an element by its index such as `dictionary[2]`. As an exercise for you, what if we want to convert `dictionary` back to an array of data again? (*hint* use `Object.keys` and `reduce`)
 
 ### Reducing functions
 
@@ -67,26 +69,20 @@ const multiple = (a) => a * 10;
 const operations = [minus, add, multiple];
 ```
 
-Javascript follows *declarative* programming mechanism, most of the time it would need to write one final function like 
-```js
-calculate(x)
-```
-to apply all the functions in `operations` to a number instead of the imperative style 
-```js
-minus(add(multiple(1)))
-```
-even though the twos can yield the same result. At first attempt to compose a single function, we can try to use `reduce` to apply each function to a value:
+Javascript follows *declarative* programming mechanism, most of the time it has a final function like `calculate(x)` to apply all the functions in `operations` to a number instead of the imperative style `minus(add(multiple(1)))` even though the twos can yield the same result. At first attempt to compose a single function, we can try to use `reduce` to apply each function to a value:
 ```js
 const result = operations.reduceRight((acc, f) => { 
-    // reduceRight is similar to reduce, but it can keep the order from right to left  
+    // `reduceRight` is similar to `reduce`, but it can 
+    // keep the order from right to left  
     return f(acc);
 },1); 
 console.log(result); //output: 9
-console.log(minus(add(multiple(1)))) //output: 9 = (1*10) + 1 - 2
+console.log(minus(add(multiple(1)))) 
+//output: 9 = (1*10) + 1 - 2
 ```
 Notice that we don't have the final function like `calculate(x)` yet, what if we need to apply the list of functions to more values e.g. `calculate(1), calculate(3)... `? 
 
-At second attempt, instead of apply `f()` immediately, it should return a new function
+Second attempt, instead of apply `f()` immediately, it should return a new function
 
 ```js
 const calculate = operations.reduceRight((acc, f) => {   
@@ -106,20 +102,20 @@ const calculate = compose(minus,add,multiple);
 calculate(1): //output 9
 compose(minus,add)(1) //output 0
 ```
-What change now is `operations` is replaced by `fns` argument as the input for our utility function. Then `compose` function returns another function which will be applied with the list of `fns` argument when it executes. 
+What change now is that `operations` is replaced by `fns` argument as the input for our utility function. Then `compose` function returns another function which will be applied with the list of `fns` argument when it executes. 
 
-The utility function `compose` can now be used with other list of functions easily. In fact,`compose` is so useful that many libraries have their own implementation for it e.g. [Underscore](https://devdocs.io/underscore/index#compose) or [Redux](https://redux.js.org/api/compose). If you work in React Redux app, the second form of function 
+`compose` is quite common and so useful that many libraries have their own implementation for it e.g. [Underscore](https://devdocs.io/underscore/index#compose) or [Redux](https://redux.js.org/api/compose). If you work in React Redux app, the second form of function 
 ```js
 compose(minus,add)(1)
 ```
- can be familiar to you. Assume that we have a React component that has many Higher-Order Component (HOC) wrappers, we can use `compose` to have a concise structure
+ can be familiar to you. Assume that we have a React component that has many Higher-Order Component (HOC) wrappers, we can use `compose` to have a concise structure like
 
 ```js
 export default compose(
     React.memo,
     HOCWrapper1,
     HOCWrapper2,
-    connect(mapStateToProps, mapDispatchToProps) //React-redux
+    connect(mapStateToProps, mapDispatchToProps) //from react-redux
 )(MyComponent)
 
 // if don't use `compose`, we'd have to write
@@ -129,7 +125,7 @@ export default React.memo(
             connect(mapStateToProps, mapDispatchToProps)(MyComponent)
             )))
 ```
-The first style is much cleaner to describe all the wrappers around the component. Notice that the order when apply the functions can produce different results
+The first style is much cleaner to describe all the wrappers around the component. Notice the order when apply the functions can produce different results. For example
 
 ```js
 // result of 
@@ -139,9 +135,9 @@ compose(add,multiple,minus)
 ```
 Thus, you should pay attention to the order of applying functions in `compose` before using it.
 
-### Closure in functional composition
+### Closure in function composition
 
-Closure in JS revolves around state of functions. We need closure when we want to retrieve some state in function's execution context. Assume that we need to call a `chargeCredit` function at the final step of checkout, because this function is critical, we need to make sure it is called only once time.
+Closure in JS revolves around state of functions. We need closure when we want to retrieve some state in function's execution context. Assume that we need to call a `chargeCredit` function at the final step of checkout, because this function is important, we can add a wrapper to make sure it is called only once time.
 
 ```js
 const once = (fn) => {
@@ -218,7 +214,7 @@ then the new `calculate` function needs to be executed on another object, which 
 
 ### Closure with objects
 
-As we see in the implementation of `once`, it just has a simple flag: `isExecuted` inside a closure. Suppose that we use an object instead of a boolean flag, we can store many more data. A common use case is caching results of function calculation, in JS this technique is called *memoization*. 
+As we see in the implementation of `once`, it just has a simple flag: `isExecuted` inside a closure. Suppose that we use an object instead of a boolean flag, we can store much more data. A common use case is caching results of function calculation, in JS this technique is called *memoization*. 
 
 ```js
 const memoize = (fn) => {
@@ -249,7 +245,7 @@ fastOperation(5); //output: operation executed 5
 fastOperation(5); //output: 5
 fastOperation(7); //output: operation executed 7
 ```
-The example shows that `fastOperation`, which is composed from `memoize(longOperation)` can cache its result for each input value when executing. The first time a value is applied e.g. `fastOperation(5)`, the function runs normally and cache the result, second time when call `fastOperation(5)` again, the function just return cached result immediately. 
+The example shows that `fastOperation`, which is composed from `memoize(longOperation)` can cache its result for each input value when executing. The first time a value is applied e.g. `fastOperation(5)`, the function runs normally and cache the result, second time when call `fastOperation(5)` again, the function just returns the cached result immediately. 
 
 This `memoization` is quite helpful for improving performance in some cases, but we need to use it with a good consideration. For example in the serializing `key` of this implementation, it uses `JSON.stringify`, but if the array is big `JSON.stringify` can slow down the computation, and the memory need to spend to cache results also increases. 
 
@@ -257,7 +253,7 @@ Memoization technique is popular in recursive calculations e.g. fibonacci number
 
 ### Javascript Promise
 
-`Promise` is a built-in object in JS, much like others objects or array. Promise encapsulates asynchronous operation in our app, and provide a better way to deal with asynchronous actions instead of callbacks. With function composition and closure, let's try to do reverse engineering for `Promise`. At the first draft, we know when using `Promise` it needs to be a new object, and it has to handle a wrapped asynchronous function.
+`Promise` is a built-in object in JS, much like other objects or arrays. Promise encapsulates asynchronous operation in JS app, and provide a better way to deal with asynchronous actions instead of callbacks. With function composition and closure, let's try to do reverse engineering for `Promise`. At the first draft, we know when using `Promise` it needs to be a new object, and it has to handle a wrapped asynchronous function.
 
 ```js
 class MyPromise { // version 1
@@ -275,7 +271,7 @@ const myAsync = new MyPromise((resolve, reject) => {
 })
 myAsync.then(value => console.log(value));
 ```
-The current `MyPromise` class does not have api `then` and the way to store resolved value, let's revise the class
+The current `MyPromise` class does not have API `then` and the way to store the resolved value, let's revise the class
 
 ```js
 class MyPromise { //version 2
@@ -290,7 +286,7 @@ class MyPromise { //version 2
     }
 }
 ```
-The class has `then` api now, but how an object from `MyPromise` get resolved or rejected ?
+The class has `then` API now, but how can an object instance of `MyPromise` get resolved or rejected ?
 
 If you look more carefully, when the constructor function of Promise accepts a function, that function argument contains the asynchronous action. After the asynchronous action finishes, it triggers `resolve()` to update the state of the promise. Thus the function argument `fn` in our case have to be called inside the constructor with `resolve` and `reject` as 2 functional inputs. 
 
@@ -302,7 +298,8 @@ class MyPromise { //version 3
         this.handlers = [];
         this.resolve = this.resolve.bind(this);
         this.reject = this.reject.bind(this);
-        fn(this.resolve, this.reject);
+        //fn is called with `resolve` and `reject` functions
+        fn(this.resolve, this.reject); 
     }
     then(func) {
         this.handlers.push(func);
@@ -319,8 +316,7 @@ class MyPromise { //version 3
     // need to implement reject, catch...
 }
 ```
-As show in the code, now `MyPromise` class can store `value` whenever promise is resolved. What the `then` api does is just accept a function, and push it into the list of `handlers` inside promise. Later, when we call `resolve()`, these handlers can be triggered with the `value` from promise. Notice that when we create a new promise, the `fn` input need to be executed to resolve the state of the same promise instance, that's why we have
-these bindings 
+As show in the code, now `MyPromise` class can store `value` whenever a promise is resolved. What the `then` API does is just accept a function, and push it into the list of `handlers` inside promise. Later, when we call `resolve()`, these handlers can be triggered with the `value` from promise. `resolve` and `reject` are passed to `fn` as callbacks, that's why we need the bindings as following
 ```js
 this.resolve = this.resolve.bind(this);
 this.reject = this.reject.bind(this);
@@ -340,7 +336,7 @@ myAsync.then(value => console.log(value)); //output: Resolved 10
 
 ### Summary
 
-In this article, we went from some simple compositions of functions to Array `reduce`, from that we can build a utility `compose` which can combine many functions together. Moving to *closure*, examples show that we can use `closure` to create useful methods like `once` and `memoize`. Finally with the reverse engineering of `promises`, hopefully it can give you a clearer picture of how objects and functions in JS are used and constructed, at the atomic level, JS contains mostly `objects` and `functions`.
+In this article, we went from some simple compositions of functions in `sort`, `reduce`, to implementing some utilities like `once` or `compose`. We also describe how to use *closure* in different cases, especially for `memoize` function. Finally with the reverse engineering of `promises`, hopefully it can give you a clearer picture of how objects and functions in JS are used and constructed.
 
 ### References
 
