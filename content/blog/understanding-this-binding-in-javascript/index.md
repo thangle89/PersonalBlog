@@ -16,7 +16,7 @@ stateDiagram-v2
         note left of ExecuteFunction : `this` object is binded from `env2`.
 -->
 
-**TL;DR** Every function in javascipt has an environment (env) object associates with it, `this` object in that environment is passed from the immediate environment if not using any of `call`, `apply` or `bind` functions
+**TL;DR** Every function in Javascript has an environment (env) object associates with it, `this` object in that environment is passed from the immediate environment if not using any of `call`, `apply` or `bind` functions
 
 ###Introduction
 
@@ -26,7 +26,7 @@ a.sum();
 const temp = a.sum;
 temp();
 ```
-The outputs of `a.sum()` and `temp()` can be unsuprisingly different, depend on the context of `this`. A more common case we can encounter if working in React applications is
+The outputs of `a.sum()` and `temp()` can be unsurprisingly different, depend on the context of `this`. A more common case we can encounter if working in React applications is
 
 ```js
 class MyForm extends React.Component {
@@ -71,7 +71,7 @@ var a = 1;
 function sum(b) { 
     return this.a + b; // env is created with b as variable
     };
-sum(2); // `this` object is binded from global env
+sum(2); // `this` object is bind from global env
 //output: 3
 ```
 
@@ -120,7 +120,7 @@ const getVal = myObj.getValue;
 getVal(); // output: 1
 myObj.getValue() //output: 1
 ```
-For fat arrow functions, `this` object is always passed from immediate environment where the function is created, *NOT* where it's executed. This quite subtle distinction is the main reason for most of the confusion about `this` object.  As we can see in the example where we use the arrow function for `getValue`, `this` from global context is binded to it, thus output for it is `1` in both cases.
+For fat arrow functions, `this` object is always passed from immediate environment where the function is created, *NOT* where it's executed. This subtle distinction is the main reason for most of the confusion about `this` object.  As we can see in the example where we use the arrow function for `getValue`, `this` from global context is bind to it, thus output for it is `1` in both cases.
 
 ### `call`, `apply` and `bind`
 
@@ -180,7 +180,7 @@ personB.getName(); // Peter
 ```
 When constructor functions called with `new`, a new object is created. That's why in classes or constructor functions, `this` always bind to different objects.
 
-Let's review the example with React component at the begining
+Let's review the example with React component at the beginning
 ```js
 class MyForm extends React.Component {
     constructor(){
@@ -200,7 +200,7 @@ class MyForm extends React.Component {
     }
 }
 ```
-When React render its components' tree, it will call the contructor function of `MyForm` component to create instance of the component and link it with an actual HTML DOM in document. The reason `MyForm` component need to bind `this` object is because `handleSubmit` function will be passed to the corresponding DOM in HTML page via `onSubmit={this.handleSubmit}`, in which the function will get called on a different object, compare to the component instance, so if it doesn't bind `this` object in `handleSubmit`, the function cannot access to state of `MyForm` component's instance. 
+When React render its components' tree, it will call the constructor function of `MyForm` component to create instance of the component and link it with an actual HTML DOM in document. The reason `MyForm` component need to bind `this` object is because `handleSubmit` function will be passed to the corresponding DOM in HTML page via `onSubmit={this.handleSubmit}`, in which the function will get called on a different object, compare to the component instance, so if it doesn't bind `this` object in `handleSubmit`, the function cannot access to state of `MyForm` component's instance. 
 
 ### Closure
 
@@ -219,7 +219,7 @@ function f1() {
 ...
 f1()()(); // output: 3 
 ```
-Each function has environment object attached to it. In the function scope when execute, if it cannot find the value for its variable in its enviroment, it will look for it in upper level environment.
+Each function has environment object attached to it. In the function scope when execute, if it cannot find the value for its variable in its environment, it will look for it in upper level environment.
 
 ```js
 const f = f1()();
@@ -240,7 +240,7 @@ Most of the time, we just need to remember a simple rule: *`this` object is pass
 ### References
 1: [Object Prototype](https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Objects/Object_prototypes)
 
-2: [Funtion apply](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/apply)
+2: [Function apply](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/apply)
 
 3: [Function call](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/call)
 
