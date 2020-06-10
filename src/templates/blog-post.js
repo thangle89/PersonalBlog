@@ -11,6 +11,9 @@ const BlogPostTemplate = ({ data, pageContext, location }) => {
   const post = data.markdownRemark
   const siteTitle = data.site.siteMetadata.title
   const { previous, next } = pageContext
+  const image = post.frontmatter.image
+      ? post.frontmatter.image.childImageSharp.resize
+      : null
 
   return (
     <Layout location={location} title={siteTitle}>
@@ -20,6 +23,8 @@ const BlogPostTemplate = ({ data, pageContext, location }) => {
       <SEO
         title={post.frontmatter.title}
         description={post.frontmatter.description || post.excerpt}
+        keywords={post.frontmatter.keywords}
+        image={image}
       />
       <article>
         <header>
@@ -99,6 +104,16 @@ export const pageQuery = graphql`
         title
         date(formatString: "MMMM DD, YYYY")
         description
+        keywords
+        image: featured {
+          childImageSharp {
+            resize(width: 1200){
+              src
+              height
+              width
+            }
+          }
+        }
       }
     }
   }

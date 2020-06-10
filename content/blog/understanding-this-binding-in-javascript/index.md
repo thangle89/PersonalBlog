@@ -2,6 +2,8 @@
 title: Understanding `this` binding and closure in Javascript
 date: "2020-05-30T22:12:03.284Z"
 description: "Simple rules to undestand `this` binding with examples in React app"
+keywords: "this binding, javascript, react, programming"
+featured: "./this-js-binding.svg"
 ---
 
 ![this binding in js](./this-js-binding.svg)

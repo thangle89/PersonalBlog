@@ -2,6 +2,8 @@
 title: Key factors to impact performance of your site
 date: "2020-06-20T22:12:03.284Z"
 description: "A guide to understand how browsers manage its contents, running scripts and some tips to improve performances of websites"
+keywords: "browser, javascript, performance"
+featured: "./js-runtime.png"
 ---
 ***
 
@@ -49,20 +51,32 @@ The rendering is a progressive progress, browsers try to display the content as 
 
 At first step, HTML and css stylesheet are parsed to construct a DOM tree. Notice that during this step, if the parser encounter external link to stylesheet, images or javascript files, the parser will stop and wait for download, parse and run (for javascript files), then resume afterward.
 
-> Performance tip 1: put Javascript file at the end of HTML to prevent blocking browser parsing the DOM
-
 We could do the same for external stylesheets but styles are required to paint the DOM tree, if the style get updated, it will cause repainting of the corresponding DOM nodes.
 
->Performance tip 2: put stylesheets in <head> tag to allow browser to load it in first priority.
+After pasrsing HTML and stylesheet in the first step, the results are a DOM tree and styles context tree. In the second step, a render tree is constructed based on the DOM tree and the style context. When finish this step, the document state will be complete and emit the `DomContentLoaded` event. At this point any script tag with `defer` attribute in the html will start to download and execute.
 
-After pasrsing HTML and stylesheet in the first step, the results are a DOM tree and styles context tree. In the second step, a render tree is constructed based on the DOM tree and the style context. When finish this step, the document state will be complete and emit the `load` event.
+In third step, the engine will calculate exact coordinate for each node of the tree. Then in the final step, the render tree is painted by UI backend component. Note that this painting process is incremental, usually browser keeps a list of UI changes that need to be painted, then at one point, it will flush all the changes at once to improve performance. Each node in the tree has a `dirty` boolean flag. The purpose of the flag is to keep track of which nodes has updated styles, hence browsers can recompute only relevant nodes as oppose to the whole tree.
 
-In third step:
+### 5.Improve performance
 
-### Loading resources
-- async and defer script tag
+A you can see, the performance of browsers mainly depended on how fast they can download and parse resources (html, javascript, stylesheet, images...etc). First rule of thumb is keeping the size of resources as small as possible, and consider using server caching or CDN for static resources. 
+
+During the parsing process, if browser encounters script tags, images or stylesheet, it will pause parsing the HTML document, and start to download the external resources, then execute them (in case of Javascript). Because the rendering engine and Javascript runtime share the same thread, if Javascript code is running, browser cannot do anything else.
+
+***Performance tip 1***: put Javascript files at the end of HTML to prevent blocking browser parsing the DOM 
+
+For stylesheet, putting them at the end of HTML actually can harm the perceived speed of the website as browser need styles information to paint the DOM tree. After parsing everything, if styles change, it will cause a whole page re-paint again.
+
+***Performance tip 2***: put stylesheets in head of HTML document to allow browser loading it in first priority.
+
+***Performance tip 3***: use `async` and `defer` attribute to specify the priority of each Javascript files. 
+
+When browser sees script with `async` attribute, it will spin off another thread to download the script, then parse it in the main thread when download is finished. With `defer` attribute, scripts will be downloaded after the DOM tree finished parsing. You can see the flow in more details in the following picture [img source](https://v8.dev/features/modules)
+![scripts parsing flow](./script-parsing.png)
+
+***Performance tip 4***: lazy load images 
 - Lazy load images (native, library)
-- link prefech, preload, preconnect
+- link prefech, preload, preconnect, modulepreload
 - bundle splitting
 - Dynamic load bundle (link vs script tag, dynamic import)
 ### Cookies
@@ -75,8 +89,12 @@ In third step:
 ### 9. Miscellaneous and Security
 - Browser cache
 - service worker
-### Reference
 - HTTPS
 - CSP
 - Cookies
 - CORS(simple vs preflights)
+
+### Reference
+https://www.html5rocks.com/en/tutorials/internals/howbrowserswork/
+https://v8.dev/features/modules
+https://developer.mozilla.org/en-US/docs/Web/HTML/Preloading_content

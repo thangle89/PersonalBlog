@@ -6,10 +6,11 @@ module.exports = {
       summary: `who likes to learn new things`,
     },
     description: `Personal blog where I want to share my experience and mental modals of programming`,
-    siteUrl: `https://thangledev.io/`,
+    siteUrl: `https://thangledev.com`,
     social: {
       twitter: `thanglequoc`,
     },
+    keywords: "thangle, thangledev, blog, programming, web development"
   },
   plugins: [
     {
