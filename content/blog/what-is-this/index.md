@@ -2,6 +2,7 @@
 title: What is this blog about
 date: "2020-05-27T22:12:03.284Z"
 description: "Some information about me and why I started this blog"
+keywords: "thangledev"
 ---
 
 **What is this blog for?**
