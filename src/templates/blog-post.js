@@ -12,6 +12,8 @@ const BlogPostTemplate = ({ data, pageContext, location }) => {
   const siteTitle = data.site.siteMetadata.title
   const { previous, next } = pageContext
   const image = post.frontmatter.image
+   && post.frontmatter.image.childImageSharp
+   && post.frontmatter.image.childImageSharp.resize
       ? post.frontmatter.image.childImageSharp.resize
       : null
 
