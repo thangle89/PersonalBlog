@@ -1,5 +1,5 @@
 ---
-title: Key factors to impact performance of your site
+title: Key factors to impact performance of your site (DRAFT)
 date: "2020-06-20T22:12:03.284Z"
 description: "A guide to understand how browsers manage its contents, running scripts and some tips to improve performances of websites"
 keywords: "browser, javascript, performance"
@@ -7,7 +7,7 @@ featured: "./js-runtime.png"
 ---
 ***
 
-At times you can heard people say ***"browsers can only run synchronous actions"***, some can say ***"browsers can run asynchronous Javascript"***, which is correct ?? If both are true, how do they all fit together ? 
+<!-- At times you can heard people say ***"browsers can only run synchronous actions"***, some can say ***"browsers can run asynchronous Javascript"***, which is correct ?? If both are true, how do they all fit together ? 
 
 In this article, besides trying to answer those questions, I also believe that if you can understand the way browsers work and how it run Javascript code, you can improve performance of many parts on your site.
 
@@ -59,42 +59,46 @@ In third step, the engine will calculate exact coordinate for each node of the t
 
 ### 5.Improve performance
 
-A you can see, the performance of browsers mainly depended on how fast they can download and parse resources (html, javascript, stylesheet, images...etc). First rule of thumb is keeping the size of resources as small as possible, and consider using server caching or CDN for static resources. 
+A you can see, the performance of browsers mainly depended on how fast they can download and parse resources (html, javascript, stylesheet, images...etc). First rule of thumb is keeping the size of resources as small as possible, and consider using server caching or CDN for static resources. In addition server often compress javascript (as gzip files) or images to reduce the size that needed to transfer the files over network.
 
 During the parsing process, if browser encounters script tags, images or stylesheet, it will pause parsing the HTML document, and start to download the external resources, then execute them (in case of Javascript). Because the rendering engine and Javascript runtime share the same thread, if Javascript code is running, browser cannot do anything else.
 
-***Performance tip 1***: put Javascript files at the end of HTML to prevent blocking browser parsing the DOM 
+- **Order of Javascript**: put Javascript files at the end of HTML to prevent blocking browser parsing the DOM 
 
 For stylesheet, putting them at the end of HTML actually can harm the perceived speed of the website as browser need styles information to paint the DOM tree. After parsing everything, if styles change, it will cause a whole page re-paint again.
 
-***Performance tip 2***: put stylesheets in head of HTML document to allow browser loading it in first priority.
+- **Order of stylesheet**: put stylesheets in head of HTML document to allow browser loading it in first priority.
 
-***Performance tip 3***: use `async` and `defer` attribute to specify the priority of each Javascript files. 
+- **Async and defer**: use `async` and `defer` attribute to specify the priority of each Javascript files. 
 
-When browser sees script with `async` attribute, it will spin off another thread to download the script, then parse it in the main thread when download is finished. With `defer` attribute, scripts will be downloaded after the DOM tree finished parsing. You can see the flow in more details in the following picture [img source](https://v8.dev/features/modules)
+When browser sees script with `async` attribute, it will spin off another thread to download the script, then parse it in the main thread when download is finished. With `defer` attribute, scripts will be downloaded after the DOM tree finished parsing. You can see the flow in more details in the following picture 
+
 ![scripts parsing flow](./script-parsing.png)
+[img source](https://v8.dev/features/modules)
 
-***Performance tip 4***: lazy load images 
-- Lazy load images (native, library)
-- link prefech, preload, preconnect, modulepreload
-- bundle splitting
-- Dynamic load bundle (link vs script tag, dynamic import)
-### Cookies
-- reduce cookie
-- free cookie request
-### HTTP caching and ajax
-- gzip
-- cache control
-### CORS(simple vs preflights)
-### 9. Miscellaneous and Security
-- Browser cache
-- service worker
-- HTTPS
-- CSP
-- Cookies
-- CORS(simple vs preflights)
+- **Lazy load images**: image loading an easy performance optimization if done correctly. Now browers is starting to support it natively. For older browsers we can use some Javascripts library to do the lazy load as the example in [here](https://developers.google.com/web/fundamentals/performance/lazy-loading-guidance/images-and-video)
+
+- **link prefech, preload, modulepreload**: [<Link>](https://developer.mozilla.org/en-US/docs/Web/HTML/Preloading_content) has support for `prefech` and `preload` resources for JS and css files. These attributes help browsers priority resource loading correctly. `preload` is used when some resources are absolutely needed in the current page. When this attribute is used, broswer will load the resource in different thread. `prefetch`, on the other hand, is used to indicate that some resource will probably be required in future navigation, so browser can load them in idle time. [details](https://medium.com/reloading/preload-prefetch-and-priorities-in-chrome-776165961bbf)
+
+- **JS bundle splitting and dynamic import** In mordern apps, they depends heavily on JS code, that makes the JS files for these apps is often very big. [Webpack](https://webpack.js.org) is a great tool to split the JS bundle to multiple files. Depending on user's navigation, the browser then can load only necessary JS codes. Browser is also starting to support dynamic importing JS modules natively as in [v8engine](https://v8.dev/features/dynamic-import). However, manually using dynamic import will need a greater effort to make sure websites work properly.
+
+### 6.HTTP request
+
+- **Cache control**: This is a header inside HTTP request that can help browsers decide whether to cache the HTTP response or not, some example values are 
+
+```
+Cache-Control: max-age=<seconds>
+Cache-Control: max-stale[=<seconds>]
+Cache-Control: min-fresh=<seconds>
+Cache-Control: no-cache
+```
+
+- **Reduce cookie**: In large app, resources are often hosted in another domain that's different with website domain. To download the files in these cases, browsers have to send [CORS](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS) request (cross domain). In these kind of requests, make sure to exclude cookies by not using the header `withCrdentials` in `XMLHttpRequest` to reduce requests' size
+
+- **Use simple CORS request**: when your apps infact need to send CORS requests, you can consider only use `simple` requests as opposed to `preflighted` requests. `preflighted` requests will cost 2 round trips requests to get response from servers as at first, they need to send an `OPTIONS` requests to learn what servers can support. Thus using `simple` requests can save some network traffic. 
+
 
 ### Reference
 https://www.html5rocks.com/en/tutorials/internals/howbrowserswork/
 https://v8.dev/features/modules
-https://developer.mozilla.org/en-US/docs/Web/HTML/Preloading_content
+https://developer.mozilla.org/en-US/docs/Web/HTML/Preloading_content -->
