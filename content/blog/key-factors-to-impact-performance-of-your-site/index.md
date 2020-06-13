@@ -229,11 +229,11 @@ In large app, resources are often hosted in another domain that's different with
 
 A web server is hosted at the domain `www.mysite.com`, `mypic.png` on the other hand, is hosted at `domain-a.com`. In this situation, browser needs to issue CORS request to `domain-a.com` to get `mypic.png`. For requesting to static resources under CORS scenario, make sure to exclude cookies by not using the header `withCrdentials` in `XMLHttpRequest` to reduce requests' size
 
-In addition, consider using only `simple` requests, not `preflighted` requests for CORS. `preflighted` requests will cost 2 round-trip requests to get response from server, because at first it needs to send an `OPTIONS` request to learn what servers can support. Using `simple` requests can save some network traffic. 
+In addition, consider using only `simple` requests, not `preflighted` requests for CORS. `preflighted` requests cost 2 round-trip requests to get response from server, because at first it needs to send `OPTIONS` request to learn what servers can support. Using `simple` requests can save some network traffic. 
 
 ### 6.Summary
 
-In this article, we analyze performance mostly on clientside of web application. Performance of websites depends on many factors, but for the most part, loading resources plays a key role in tuning web application. A good practise is keep monitoring the performance of your site and identify which areas that cause biggest problems. It's not recommended to begin performance analysis with CORS requests for instance, if you haven't looked into Javascript or images loading optimization. 
+In this article, we analyze performance mostly on clientside of web application. Performance of websites depends on many factors, but for the most part, adjusting the process of loading resources plays a key role in tuning web application. A good practise is keep monitoring performance of your site and identify which areas that cause biggest problems. It's not recommended to begin performance analysis with CORS requests for instance, if you haven't looked into Javascript or images loading optimization. 
 
 #### Image references
 - [Figure 1: Network overview](https://developer.mozilla.org/en-US/docs/Learn/Server-side/First_steps/Client-Server_overview)
