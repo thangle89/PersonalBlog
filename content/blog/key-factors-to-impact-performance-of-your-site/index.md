@@ -226,6 +226,7 @@ console.log(document.cookie); // output: "userId=1dfe3; visitCount=10"
 In large app, resources are often hosted in another domain that's different with website domain. To download files in these cases, browsers have to send CORS request (cross domains request). Example scenario for CORS requests as following:
 
 ![CORS request](./cors-request.png)
+*<center>Figure 7: CORS request</center>*
 
 A web server is hosted at the domain `www.mysite.com`, `mypic.png` on the other hand, is hosted at `domain-a.com`. In this situation, browser needs to issue CORS request to `domain-a.com` to get `mypic.png`. For requesting to static resources under CORS scenario, make sure to exclude cookies by not using the header `withCrdentials` in `XMLHttpRequest` to reduce requests' size
 
