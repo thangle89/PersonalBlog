@@ -7,7 +7,7 @@ featured: "./js-runtime.png"
 ---
 ***
 
-Performance is important aspect of web development, especially for ecommerce sites. To have a good performant site, we need to optimize many parts of the applications, from server to client sides. In this article, I will mainly analyse the factors that impact performance from client side, i.e. how does browsers work, and what we can do to improve performance of the site.
+Performance is important aspect of web development, especially for ecommerce sites. To have a good performant site, we need to optimize many parts of the applications, on server and client sides. In this article, I will mainly analyze the factors that impact performance from client side, i.e. how does browsers work, and what we can do to improve performance of the sites.
 
 ### 1. General Flow
 
@@ -47,31 +47,31 @@ In general, when browsers get content from network responses, they render and di
 
 **Javascript interpreter:** parse and execute Javascript (JS) code.
 
-**Networking:** sending HTTP requests and get responses from network.
+**Networking:** send HTTP requests and get responses from network.
 
 **Data Persistence:** is where browsers store cookies, localStorage, sessionStorage...etc
 
-In these components, browser engines and Javascript interpreter share the same thread and follows synchronous execution model, which means when browsers parsing HTML it cannot execute scripts and vice versa. However, the networking component usually has 2-6 threads (depends on browsers), that's why it can send 2-6 HTTP requests in parallel. In short, **browsers can only run synchronous actions except when sending HTTP requests**. We will explore the Javascript intepreter in details to understand how it can run asynchronous actions. 
+In these components, browser engines and Javascript interpreter share the same thread and follows synchronous execution model, which means when browsers parse HTML it cannot execute scripts and vice versa. However, the networking component usually has 2-6 threads (depends on browsers), that's why it can send 2-6 HTTP requests in parallel. In short, **browsers only run synchronous actions except when sending HTTP requests**. We will explore the Javascript interpreter in details to understand how JS runtime handle asynchronous actions. 
 
 ### 3.Javascript interpreter
 
 ![JS interpreter](./js-runtime.png)
 *<center>Figure 3: Javascript interpreter</center>*
 
-Javascript interpreter, or can be called Javascript runtime, has three main components: Stack, Heap and Queue. The event loop runs in the main thread of browser. It constantly checks messages in Queue, and put them in Stack whenever the Stack is empty. Heap is like a memory of Javascript runtime, in which it stores all the runtime context such as variables, function, global `this` object...etc. Stack is where Javascript code get parsed and executed, if a function in the script execute, and then run another function, another Frame will be inserted to the Stack, so that JS runtime can keep track of the order of execution.
+Javascript interpreter, or can be called Javascript runtime, has three main components: Stack, Heap and Queue. The event loop runs in the main thread of browser. It constantly checks messages in Queue, and put them in Stack whenever the Stack is empty. Heap is like a memory of Javascript runtime, in which it stores all the runtime context such as variables, functions, global `this` object...etc. Stack is where Javascript code get parsed and executed, if a function in the script execute, and then run another function, a new Frame will be created and inserted to the Stack, so that JS runtime can keep track of the order of execution. 
 
- In browser environment, Javascript runtime is connected to the networking component of browser. After getting HTTP reponses, the networking component insert callbacks to handle the reponses into the Queue. Because networking component runs on a different thread, it does not block JS runtime to execute scripts while sending network requests. The event loop and Queue are main reasons Javascript can execute asynchronous actions.
+ In browser environment, Javascript runtime is connected to the networking component. After getting HTTP responses, the networking component inserts callbacks to handle the responses into the Queue. Because networking component runs on a different thread, it does not block JS runtime to execute scripts while sending network requests. The event loop and Queue are main reasons Javascript can execute asynchronous actions.
 
 ### 4. Rendering flow
 
 ![rendering flow](./rendering-flow.png)
 *<center>Figure 4: Rendering flow</center>* 
 
-As we see in the image above, before painting html content to users screen, browsers contruct a `DOM` tree and a `render` tree in the process. They are data representation of HTML tags. Rendering is an incremental progcess, browsers try to display the content as soon as possible. HTML document is usually broken down to multiple chunks of 8Kb and passed to rendering engine. 
+As we see in the image above, before painting html content to users screen, browsers construct a `DOM` tree and a `render` tree in the process. They are data representation of HTML tags. Rendering is an incremental process, in which browsers try to display the content as soon as possible. HTML document is usually broken down to multiple chunks of 8Kb and passed to rendering engine. 
 
-At first step, HTML and css stylesheet are parsed to construct a DOM tree. Note that during this step, if the parsers encounter external links to stylesheet, images or JS files, they will stop and wait for download, parse and run (for javascript files), then resume parsing HTML afterward. The reason browsers is blocked if need to download and parse resources is because rendering engine share the same thread with JS intepreter.
+At first step, HTML and css stylesheet are parsed to construct a DOM tree. Note that during this step, if the parsers encounter external links to stylesheet, images or JS files, they will stop and wait for download, parse and run (in case of JS files), then resume parsing HTML afterward. The reason browsers are blocked if needed to download and parse resources is because rendering engine share the same thread with JS interpreter.
 
-After pasrsing HTML and stylesheet in the first step, the results are a DOM tree and styles context tree. In the second step, another tree which is called `render tree` is constructed based on the DOM tree and the style context. To visualize the render tree easier as a programmer, we can see the following code for an element (`RenderObject`) in the `render tree`: 
+After parsing HTML and stylesheet in the first step, the results are a DOM tree and styles context tree. In the second step, another tree which is called `render tree` is constructed based on the DOM tree and the style context. To visualize the render tree easier as programmer, we can see the following code for an element (`RenderObject`) in the `render tree`: 
 
 ```cpp
 class RenderObject{
@@ -80,7 +80,7 @@ class RenderObject{
   virtual void rect repaintRect();
   Node* node;  //the DOM node
   RenderStyle* style;  // the computed style
-  RenderLayer* containgLayer; //the containing z-index layer
+  RenderLayer* containingLayer; //the containing z-index layer
 }
 ```
 
@@ -96,15 +96,15 @@ During the parsing process, if browser encounters script tags, images or stylesh
 
 - **Javascript**: put JS files at the end of html page to prevent blocking browser parsing the page, and also avoid long operation methods in script. Try to breaks long operations methods into smaller chunks of execution. That way it can avoid blocking UI for end users. In case application is required to run heavy computational tasks in JS, you can export them to web workers, which are run on different threads. 
 
-When scripts access style information like `offsetHeight`, they can trigger browsers re-painting DOM and reflow  document, because browsers need to provide the accurate style information for scripts, so they need to flush all pending changes to DOM. Thus try to avoid accessing style information if not neccessary. 
+When scripts access style information like `offsetHeight`, they can trigger browsers re-painting DOM and reflow  document, because browsers need to provide accurate style information for scripts, so they need to flush all pending changes to DOM. Thus try to avoid accessing style information if not necessary. 
 
-In Single Page Application (SPA), JS scripts control most of the work in rendering document, but for improving perceived speed of first page load, you can consider using server side rendering for the critical parts of the page (above the fold). Because in the first page load, the page doesn't need to load all the resources, it only need to load enough resources to render the critical part of the page, such that users can start to interact with the page. For example if you land to agoda.com, you can see the search box appears very fast.
+In Single Page Application (SPA), JS scripts control most of the work in rendering document, but for improving perceived speed of first page load, you can consider using server side rendering for the critical parts of the page (above the fold). Because on first page load, the page doesn't need to load all the resources, it only need to load enough resources to render the critical part of the page, such that users can start to interact with the page. For example if you land to agoda.com, you can see the search box appears very fast.
 ![agoda home](./agoda-home.png)
 *<center>Figure 5: Agoda Home</center>*
 
-At first page load, the page just load enough resources to render the search box, and while users starting to search, it will then load the rest of the resources.
+At first page load, the page just loads enough resources to render the search box, and while users starting to search, it will then load the rest of the resources.
 
-- **Stylesheets**: put stylesheets in head of HTML document to allow browser download it in first priority. With stylesheet, putting them at the end of HTML actually can harm the perceived speed of websites as browsers need styles information to paint the DOM tree. After parsing everything, if styles change, it will cause a whole page re-painted again. 
+- **Stylesheets**: put stylesheets in head of HTML document to allow browser download it in first priority. With stylesheet, putting them at the end of HTML actually can harm the perceived speed of websites as browsers need styles information to paint the DOM tree. After parsing everything, if styles change, it will cause a whole page to repaint. 
 
 This rule is applied to scripts that interact with styles information too. when we calculate new styles of an element, avoid accessing and updating DOM many times, instead applying the changes in batch so that it can help browsers reduce the number of times needed to repaint document. For example:
 
@@ -125,7 +125,7 @@ newStyle.margin = '10px';
 
 mydiv.style = newStyle; // browser repaint
 ```
-The code creates `newStyle` object, it's detached from the DOM document. We can update the `newStyle` object separately then only apply the change one time. Similiarly for manipulating DOM, if we need to create DOM elements on the fly like inserting `<table>`, create new `<div>` ...etc, it's better to compute all the changes in one new object, then finally attach it to browser documnet.
+The code creates `newStyle` object, it's detached from the DOM document. We can update the `newStyle` object separately then only apply the change one time. Similarly for manipulating DOM, if we need to create DOM elements on the fly like inserting `<table>`, create new `<div>` ...etc, it's better to compute all the changes in one new object, then finally attach it to browser document.
 
 - **Async and defer**: use `async` and `defer` attributes to specify the priority of each Javascript files. When browser sees scripts with `async` attribute, it will send the script to another thread to download, then parse in main thread when download is finished. With `defer` attribute, scripts will be downloaded after DOM tree finished parsing. You can see the order in more details in the following picture: 
 
@@ -166,9 +166,9 @@ const LazyImage = ({ url }) => {
 }
 
 ```
-What we have in the simple version of `LazyImage` component is a placeholder for rendering images, when image is not in view, the component will render nothing. Inside the component, it uses `Observer` to trigger a callback when `inView` state is changed. If you don't work with React, you can use the native `Intersection Observer API` in browser and implement a `Lazy` loader for you site.
+What we have in the simple version of `LazyImage` component is a placeholder for rendering images, when image is not in view, the component will render nothing. Inside the component, it uses `Observer` to trigger a callback when `inView` state is changed. Note that the `LazyImage` component does not have a full implementation, as an exercise for you, try to think how to complete it. If you don't work with React, you can use the native `Intersection Observer API` in browser and implement a `Lazy` loader for you site.
 
-- **Link prefech, preload**: Browses has support for `prefech` and `preload` resources like JS and css files. These attributes help browsers prioritize resource loading correctly. `preload` is used when some resources are absolutely needed in the current page. When this attribute is used, broswer will download the resource immediately in different thread. `prefetch`, on the other hand, is used to indicate that some resources will probably be required in future navigation, thus browser can load them in idle time. Example usage of these attribute as following:
+- **Link prefetch, preload**: Browses has support for `prefetch` and `preload` resources like JS and css files. These attributes help browsers prioritize resource loading correctly. `preload` is used when some resources are absolutely needed in the current page. When this attribute is used, browser will download the resource immediately in different thread. `prefetch`, on the other hand, is used to indicate that some resources will probably be required in future navigation, thus browser can load them in idle time. Example usage of these attributes as following:
 
 ```html
 <head>
@@ -190,7 +190,7 @@ What we have in the simple version of `LazyImage` component is a placeholder for
 ```
 In the example, style and JS files are put under `preload` links to let browsers download them in high priority without blocking parsing the document. Then later, when the parser actually encounter stylesheet and script tag, it already has the content to continue the work, hence eliminate the waiting time for browsers to load resources.
 
-- **JS bundle splitting and dynamic import:** In mordern SPA or progressive web apps, they depends heavily on JS code, which makes JS files for these apps are often very big. In general, you should split JS files in smaller chunks to reduce resources' size on first load, and allow browsers to cache different chunks effectively. However, manually apply attributes like `async`, `defer`, `preload`, `prefetch` can cause much headache for developers. Webpack is a great tool to split the JS bundle to multiple files. Depending on user's navigation, the browser then can load only necessary JS codes. 
+- **JS bundle splitting and dynamic import:** In modern SPA or progressive web apps, they depends heavily on JS code, which makes JS files for these apps are often very big. In general, you should split JS files in smaller chunks to reduce resources' size on first load, and allow browsers to cache different chunks effectively. However, manually apply attributes like `async`, `defer`, `preload`, `prefetch` can cause much headache for developers. Webpack is a great tool to split the JS bundle to multiple files. Depending on user's navigation, browsers then can load only necessary JS codes. 
 
 - **Cache control**: This is a header inside HTTP request that can help browsers decide whether to cache the HTTP response or not. At the beginning of the article we see the example of using `Cache-Control` inside response header as
 
@@ -203,7 +203,7 @@ etag: "916afbcb0b6e36fc7356e932e6696d58-ssl-df"
 ```
 `Cache-Control` is often used together with `etag` to validate stale resources.
 
-- **Reduce cookie**: Nature of HTTP requests is stateless. Hence in order to maintain application state, website often store information using cookie and browsers can send the cookies back to servers via HTTP requests. Example of server setting cookies for browser: 
+- **Reduce cookie**: Nature of HTTP requests is stateless. Hence in order to maintain application state, websites often store information using cookie and browsers can send the cookies back to servers via HTTP requests. Example of server setting cookies for browser: 
 
 ```json
 HTTP/2.0 200 OK
@@ -228,13 +228,13 @@ In large app, resources are often hosted in another domain that's different with
 ![CORS request](./cors-request.png)
 *<center>Figure 7: CORS request</center>*
 
-A web server is hosted at the domain `www.mysite.com`, `mypic.png` on the other hand, is hosted at `domain-a.com`. In this situation, browser needs to issue CORS request to `domain-a.com` to get `mypic.png`. For requesting to static resources under CORS scenario, make sure to exclude cookies by not using the header `withCrdentials` in `XMLHttpRequest` to reduce requests' size
+A web server is hosted at the domain `www.mysite.com`, `mypic.png` on the other hand, is hosted at `domain-a.com`. In this situation, browser needs to issue CORS request to `domain-a.com` to get `mypic.png`. For requesting to static resources under CORS scenario, make sure to exclude cookies by not using the header `withCredentials` in `XMLHttpRequest` to reduce requests' size
 
 In addition, consider using only `simple` requests, not `preflighted` requests for CORS. `preflighted` requests cost 2 round-trip requests to get response from server, because at first it needs to send `OPTIONS` request to learn what servers can support. Using `simple` requests can save some network traffic. 
 
 ### 6.Summary
 
-In this article, we analyze performance mostly on clientside of web application. Performance of websites depends on many factors, but for the most part, adjusting the process of loading resources plays a key role in tuning web application. A good practise is keep monitoring performance of your site and identify which areas that cause biggest problems. It's not recommended to begin performance analysis with CORS requests for instance, if you haven't looked into Javascript or images loading optimization. 
+In this article, we analyze performance mostly on clientside of web application. Performance of websites depend on many factors, but for the most part, adjusting the process of loading resources plays a key role in tuning web application. A good practice is keep monitoring performance of your site and identify which areas that cause biggest problems. It's not recommended to begin performance analysis with CORS requests for instance, if you haven't looked into Javascript or images loading optimization. 
 
 #### Image references
 - [Figure 1: Network overview](https://developer.mozilla.org/en-US/docs/Learn/Server-side/First_steps/Client-Server_overview)
