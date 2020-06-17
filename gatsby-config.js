@@ -8,7 +8,7 @@ module.exports = {
     description: `Personal blog where I want to share my experience and mental modals of programming`,
     siteUrl: `https://thangledev.com`,
     social: {
-      twitter: `thanglequoc`,
+      twitter: `thangledev`,
     },
     keywords: "thangle, thangledev, blog, programming, web development"
   },
