@@ -59,7 +59,7 @@ const Layout = ({ location, title, children }) => {
       <header>{header}</header>
       <main>{children}</main>
       <footer>
-      <a target='blank' href='https://twitter.com/ThangLeQuoc'>Twitter</a> <a target="blank" href='https://www.linkedin.com/in/thang-le-a9695341'>LinkedIn</a>
+      <a target='blank' href='https://twitter.com/thangledev'>Twitter</a> <a target="blank" href='https://www.linkedin.com/in/thangledev'>LinkedIn</a>
       </footer>
     </div>
   )
