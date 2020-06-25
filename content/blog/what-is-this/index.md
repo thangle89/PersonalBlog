@@ -8,7 +8,7 @@ keywords: "thangledev"
 **What is this blog for?**
 
 I build this site mainly to consolidate my knowlege in software development and hopefully it can help people sometimes when they 
-need to look for related insights. I am open for ideas and suggestions, please reach out me on <a target='blank' href='https://twitter.com/ThangLeQuoc'>Twitter</a> or <a target="blank" href='https://www.linkedin.com/in/thang-le-a9695341'>LinkedIn</a>
+need to look for related insights. I am open for ideas and suggestions, please reach out me on <a target='blank' href='https://twitter.com/thangledev'>Twitter</a> or <a target="blank" href='https://www.linkedin.com/in/thangledev'>LinkedIn</a>
 
 <!-- **Why ads ?** 
 
