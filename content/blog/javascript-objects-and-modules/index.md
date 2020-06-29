@@ -142,16 +142,107 @@ The function `require` caches modules after they are loaded. As we see in the co
 From the implementation, it shows that CommonJS modules is synchronously loaded and the imported module is a new instance that's detached from its source. Hence, consumer can treat imported module as normal object and it's possible to modify or update value of that object. 
 
 - **AMD (Asynchronous Module Definition):** 
-- Format: CommonJS, AMD, ES6
-- Loaders in browsers
-- namespace
-### 4.NPM modules
-- main idead how to build and publish module in npm
-- module scope
-- module type check with typescript
-### 5.Webpack module loaders
-- Loader in webpack
-- dynamic splitting, importing modules
-### 6.Summary
+
+In browsers context, loading files requires downloading them via network requests. It's best for browsers performance when loading JS files asynchronously. AMD is a format that comforts those requirements. RequireJS is the most popular implementation for AMD loader. Example for usage of AMD and RequireJS:
+
+```js
+// index.html
+<script data-main="js/app.js" src="js/require.js"></script>
+
+// app.js
+requirejs.config({
+    baseUrl: 'js/lib',
+    paths: {
+        app: '../app'
+    }
+});
+
+requirejs(['jquery', 'app/myModule'],
+function   ($, myModule) {
+    //jQuery, myModule module are all
+    //loaded and can be used here now.
+    //...
+});
+
+//app/myModule.js
+define(function () {
+    //Do setup work here
+
+    return {
+        color: "black",
+        size: "unisize"
+    }
+});
+```
+There are many ways to dynamically load JS in browsers, the way RequireJS loads JS files is as following:
+
+```js
+var head = document.getElementsByTagName('head')[0],
+script = document.createElement('script');
+
+script.src = url;
+head.appendChild(script);
+```
+
+The basic idea is to create new script tag for each dependency, then attach them back to DOM later to avoid blocking browsers. The actual implementation is more complex as it needs to handle the order of loading dependencies, to ensure that all dependecies are loaded before main function execute in each module.
+
+There is a module format called UMD (Universal Module Definition) with the purpose to unify the common loader for both AMD and commonJS. However, the latest module format ES6 deprecates the idea of UMD.
+
+-**ES6 Module** is a native format that's built inside JS. It supports cyclic dependencies and can be statically analyzed for static checking and optimization (tree shaking in webpack). ES6 have direct support for asynchronous loading and configurable module loading in browsers. Example usage:
+
+```js
+//------ lib.js ------
+export const sqrt = Math.sqrt;
+export function square(x) {
+    return x * x;
+}
+export function diag(x, y) {
+    return sqrt(square(x) + square(y));
+}
+
+//------ main.js ------
+import { square, diag } from 'lib';
+console.log(square(11)); // 121
+console.log(diag(4, 3)); // 5
+```
+Unlike CommonJS, `import` and `export` in ES6 module has a live connection with original module code. In the example above, the imported `square` and `diag` are the same function objects from `lib.js`. Because of this live connection, imported module in ES6 is treated as constant, i.e. you cannot change the values of the imported functions or classes. 
+
+ES6 modules can be conditionally loaded by using `import` as function. For example:
+
+```js
+//------ main.js ------
+import { square } from 'lib';
+if(square(11) > 100) {
+    import('lib').then(lib => {
+        lib.diag(4,3);
+    })
+}
+```
+This feature is very useful for dynamically spliting bundles for JS modules.
+
+Modern browsers also support ES6 module `import` and `export` natively. For example:
+
+```js
+//normal script tag, load synchronously
+<script src='./main.js' />
+
+//module script tag with ES6 support, load asynchronously
+<script src='./main.mjs' type='module'/>
+```
+To distinguish `module` script with normal script, it's recommended to use `.mjs` when naming the files. There're a lot of small differences between normal scripts and module scripts. However with modern frameworks like React with Webpack everything just works without you paying much attention to the module formats. ES6 module has much more advantages over CommonJS such that Nodejs is working on the support for loading ES6 modules. 
+
+### 4.NPM modules & Webpack
+The true power of open source is reusability, it's especially easy to reuse and share modules in Javascript because of NPM. NPM is a package manager the helps applications download and install million of packages. Most of the common packages for Javascript already exists in NPM. 
+
+Javascript bundler is a popular approach to improve script loading performance for website. Webpack is one of the most common tools for bundling website assests. Webpack supports all JS module formats i.e. CommonJS, AMD, ES6 module... But it's best to use only single format inside same application. Webpack also supports dynamic splitting, tree-shaking, asynchronous script loading... out of the box
+
+### 5.Summary
 
 ### References
+https://requirejs.org/docs/api.html
+
+https://github.com/umdjs/umd
+
+https://exploringjs.com/es6/ch_modules.html
+
+https://v8.dev/features/modules
