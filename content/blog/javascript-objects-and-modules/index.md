@@ -1,6 +1,6 @@
 ---
 title: Javascript objects and modules
-date: "2020-07-06T22:12:03.284Z"
+date: "2020-07-01T22:12:03.284Z"
 description: "Describe relationship between objects and modules in Javascript. Also explain different ways to load modules in JS applications"
 keywords: "javascript, module, object, programming"
 featured: "./object-prototype.drawio.png"
@@ -58,7 +58,7 @@ program.main([personA, personB, personC]); // output: ABC
 
 ```
 
-As you can see, the code is more concise when `Person` class help create objects easier and prevent code duplication. Unlike other languages, `class` in JS is not just meta data, it's actually complied into contructor functions. Those constructors function are also objects, which are called prototype objects.
+As you can see, the code is more concise when `Person` class help create objects easier and prevent code duplication. Unlike other languages, `class` in JS is not just meta data, it's actually complied into constructor functions. Those constructors function are also objects, which are called prototype objects.
 
 ```js
 personA.__proto__ === personB.__proto__ // true
@@ -67,11 +67,11 @@ personB.__proto__ === personC.__proto__ // true
 personA.__proto__.__proto__ === personB.__proto__.__proto__ // true
 ```
 
-In JS, every object inherit from based object prototypes, because all the prototypes are objects, so it can be modified, removed in runtime. When accessing any property or method on an object, JS runtime will first look for the property or method on current object instance, if cannot find, it will go up in the prototype chain. The prototype chain's dependency can be described in following picture:
+In JS, every object inherits from based object prototype, because all the prototypes are objects, so it can be modified, removed in runtime. When accessing any property or method on an object, JS runtime will first look for the property or method on current object instance, if cannot find, it will go up in the prototype chain. The prototype chain can be described in following picture:
 
 ![prototype chain](./object-prototype.drawio.png)
 
-Prototypes or classes help creating objects more efficients. However when application grows, we still need a way to organize codes such that it's easy to maintain and develop.
+Prototypes or classes help creating objects more efficient. However when application grows, we still need a way to organize codes such that it's easy to maintain and develop.
 
 ### 2.Modules pattern
 
@@ -101,7 +101,7 @@ With this function factory, we can separate application logic into different mod
 
 ### 3.Module formats and loaders
 
-Each environment of JS has need different module formats and hence different loaders. On servers where every JS file can be stored locally, there is no need to wait for network to download any files. Thus servers often employ synchronous loaders i.e. all JS scripts can be loaded at once. On the contrary, clientsides like browsers cannot save any JS file. Therefore when loading any script, it needs to download the files before parse and execute. As browsers have to download JS files, it'd better to have asynchronous loaders i.e. while waiting for file downloading, browsers can countinue parsing DOM or handle users' events. 
+Each environment of JS needs different module formats and hence different loaders. On servers where every JS file can be stored locally, there is no need to wait for network to download any files. Thus servers often employ synchronous loaders i.e. all JS scripts can be loaded at once. On the contrary, clientsides like browsers cannot save JS files. Therefore when loading scripts, browsers need to download the files before parse and execute. As browsers have to wait for download JS files, it'd better to have asynchronous loaders i.e. while waiting for file downloading, browsers can continue parsing DOM or handle users' events. 
 
 - **CommonJS:** is the module format that's used for servers side JS (i.e. Nodejs). Example module format in CommonJS as following
 
@@ -122,7 +122,7 @@ module.exports = {
 var sum = require('calculator').sum;
 var muliply = require('calculator').multiply;
 ```
-Module in CommonJS returns an `exports` object and in comsumers (e.g. `app.js`), they call `require` function to load the module. To understand the characteristics of CommonJS modules, let's see an simple implementation of the module loader: 
+Module in CommonJS returns an `exports` object and in consumers (e.g. `app.js`), they call `require` function to load the module. To understand the characteristics of CommonJS modules, let's see an simple implementation of the module loader: 
 
 ```js
 require.cache = Object.create(null);
@@ -143,7 +143,7 @@ From the implementation, it shows that CommonJS modules is synchronously loaded 
 
 - **AMD (Asynchronous Module Definition):** 
 
-In browsers context, loading files requires downloading them via network requests. It's best for browsers performance when loading JS files asynchronously. AMD is a format that comforts those requirements. RequireJS is the most popular implementation for AMD loader. Example for usage of AMD and RequireJS:
+In browsers context, loading files requires downloading them via network requests. It's better for browsers performance when loading JS files can happen asynchronously. AMD is a format that comforts those requirements. RequireJS is the most popular implementation for AMD loader. Example for usage of AMD and RequireJS:
 
 ```js
 // index.html
@@ -184,7 +184,7 @@ script.src = url;
 head.appendChild(script);
 ```
 
-The basic idea is to create new script tag for each dependency, then attach them back to DOM later to avoid blocking browsers. The actual implementation is more complex as it needs to handle the order of loading dependencies, to ensure that all dependecies are loaded before main function execute in each module.
+The basic idea is to create new script tag for each dependency, then attach them back to DOM later to avoid blocking browsers. The actual implementation is more complex as it needs to handle the order of loading dependencies, to ensure that all dependencies are loaded before main function executed in each module.
 
 There is a module format called UMD (Universal Module Definition) with the purpose to unify the common loader for both AMD and commonJS. However, the latest module format ES6 deprecates the idea of UMD.
 
@@ -218,7 +218,7 @@ if(square(11) > 100) {
     })
 }
 ```
-This feature is very useful for dynamically spliting bundles for JS modules.
+This feature is very useful for dynamically splitting bundles for JS modules.
 
 Modern browsers also support ES6 module `import` and `export` natively. For example:
 
@@ -229,14 +229,11 @@ Modern browsers also support ES6 module `import` and `export` natively. For exam
 //module script tag with ES6 support, load asynchronously
 <script src='./main.mjs' type='module'/>
 ```
-To distinguish `module` script with normal script, it's recommended to use `.mjs` when naming the files. There're a lot of small differences between normal scripts and module scripts. However with modern frameworks like React with Webpack everything just works without you paying much attention to the module formats. ES6 module has much more advantages over CommonJS such that Nodejs is working on the support for loading ES6 modules. 
+To distinguish `module` script with normal script, it's recommended to use `.mjs` when naming the files. There're a lot of small differences between normal scripts and module scripts. However with modern frameworks like React with Webpack everything just works without you paying much attention to the module formats. ES6 module has much more advantages over CommonJS. Later version of Nodejs has the support for loading ES6 modules. 
 
-### 4.NPM modules & Webpack
-The true power of open source is reusability, it's especially easy to reuse and share modules in Javascript because of NPM. NPM is a package manager the helps applications download and install million of packages. Most of the common packages for Javascript already exists in NPM. 
+### 4.Summary
 
-Javascript bundler is a popular approach to improve script loading performance for website. Webpack is one of the most common tools for bundling website assests. Webpack supports all JS module formats i.e. CommonJS, AMD, ES6 module... But it's best to use only single format inside same application. Webpack also supports dynamic splitting, tree-shaking, asynchronous script loading... out of the box
-
-### 5.Summary
+Javascript is a dynamic language, there is no type check during runtime of applications. Every object in JS has a prototype chain, which is the basis for properties and methods inheritance. Prototypes are also objects, thus they can be modified or updated during runtime. When application grows, bigger objects that contain independent logic are created and form modules. The most common formats for modules now is ES6 for browsers. Modern bundler tools like Webpack or Rollup can be configured to use with different formats of Javascript module.
 
 ### References
 https://requirejs.org/docs/api.html
