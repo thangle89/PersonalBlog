@@ -3,7 +3,7 @@ title: Javascript objects and modules
 date: "2020-07-01T22:12:03.284Z"
 description: "Describe relationship between objects and modules in Javascript. Also explain different ways to load modules in JS applications"
 keywords: "javascript, module, object, programming"
-featured: "./object-prototype.drawio.png"
+featured: "./object-prototype.png"
 ---
 
 Javascript (JS) is very popular due to its ability to run both on servers and on clients (browsers). It is a dynamic language and has support for both object-oriented and functional programming styles. However this flexibility makes developers confused at times, especially when they need to decide whether objects or functions should be used. In addition, for large JS applications, the ways JS code is extracted into modules also cause more headache for programmers. In this article, I will try to analyze objects and modules in JS. What is the relationship between them and how modules are loaded in different types of JS applications (e.g server or clientside applications)
@@ -69,7 +69,7 @@ personA.__proto__.__proto__ === personB.__proto__.__proto__ // true
 
 In JS, every object inherits from based object prototype, because all the prototypes are objects, so it can be modified, removed in runtime. When accessing any property or method on an object, JS runtime will first look for the property or method on current object instance, if cannot find, it will go up in the prototype chain. The prototype chain can be described in following picture:
 
-![prototype chain](./object-prototype.drawio.png)
+![prototype chain](./object-prototype.png)
 
 Prototypes or classes help creating objects more efficient. However when application grows, we still need a way to organize codes such that it's easy to maintain and develop.
 
