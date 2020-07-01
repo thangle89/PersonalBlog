@@ -188,7 +188,7 @@ The basic idea is to create new script tag for each dependency, then attach them
 
 There is a module format called UMD (Universal Module Definition) with the purpose to unify the common loader for both AMD and commonJS. However, the latest module format ES6 deprecates the idea of UMD.
 
--**ES6 Module** is a native format that's built inside JS. It supports cyclic dependencies and can be statically analyzed for static checking and optimization (tree shaking in webpack). ES6 have direct support for asynchronous loading and configurable module loading in browsers. Example usage:
+- **ES6 Module** is a native format that's built inside JS. It supports cyclic dependencies and can be statically analyzed for static checking and optimization (tree shaking in webpack). ES6 have direct support for asynchronous loading and configurable module loading in browsers. Example usage:
 
 ```js
 //------ lib.js ------
