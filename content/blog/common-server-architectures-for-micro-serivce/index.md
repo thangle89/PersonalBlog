@@ -1,7 +1,7 @@
 ---
-title: A review of common server architectures for micro service
-date: "2020-07-19T22:12:03.284Z"
-description: "Curated list of popular API architecture"
+title: Common server architectures for microservice
+date: "2020-07-06T22:12:03.284Z"
+description: "Analyze Domain driven design and clean architecture for microservice. Describe common microservice patterns"
 keywords: "design patterns, software designs, API architecture"
 featured: "./clean-ddd.png"
 ---
@@ -9,57 +9,59 @@ featured: "./clean-ddd.png"
 
 ### 1. Introduction
 
-Micro service is increasingly popular in software development nowadays. The idea is to break large, monolithic systems into smaller services so that they can be managed or scaled easily. To work with these services, it is important to understand common server architectures and designs. In this article, I will compare and analyse common server architectures, then discuss popular patterns for microservice.
+Microservice is increasingly popular in software development nowadays. The idea is to break large, monolithic systems into smaller services so that they can be managed or scaled easily. To work with these services, it is important to understand common server architectures and designs. In this article, I will compare and analyse common server architectures, then discuss popular patterns for microservice.
 
 ### 2. Domain driven design (DDD) for microservice
 
-Sotwares exist to solve human problems. How easy it is to develop and maintain applications is key to software design and architecture. DDD is the approach that bridge the gap between technical and bussiness knowledge. It can foster the communication between software developers and domain experts. DDD models classes and objects (bounded context) based on business domains. An example architecture for DDD with micro services can be described in following picture:
+Sotwares exist to solve human problems. How easy it is to develop and maintain applications is key to software design and architecture. DDD is the approach that bridge the gap between technical and bussiness knowledge. It can foster the communication between software developers and domain experts. DDD models classes and objects (bounded context) based on business domains. The architecture for DDD with micro services can be described in following picture:
 
-![Domain driven design for micro service](./ddd-microservice.png)
+![Domain driven design for microservice](./ddd-microservice.png)
 
 <center>Figure 1: Domain driven design for microservice</center> <br/>
 
-As we can see, at the core of the architecture is the **Domain Model Layer**. It contains domain entities, aggregate roots or business services. These services generally should have interfaces and implementations to reflect business logic. Domain Model Layer also contains repository or external contracts and intefaces to ensure the dependency inversion principal. It is because application layer and infrastructure both depend on domain model layer, which makes domain model layer completely separated from the other two.
+As we can see, at the core of the architecture is the **Domain Model Layer**. It contains domain entities, aggregate roots or business services. These services generally should have interfaces and implementations to reflect business logic. Domain Model Layer also contains repository contracts and intefaces to ensure the dependency inversion principal. It is because application layer and infrastructure both depend on domain model layer, which makes domain model layer completely separated from the other two.
 
-**Application Layer** is what clients interact with, it should has viewmodels for api endpoints. In general, we should not expose domain objects directly to clientside. Therefore, mappers are used to convert domain entities to viewmodels and return only needed data for clientside. This layer depends on core (domain model layer) to use the business services, entity objects, repositories (ideally through dependency injection). From interfaces of repositories in domain model layers, application layer can use DI (dependency injection) to get the implementations from infrastructure layer.
+**Application Layer** is what clients interact with, it should has viewmodels for api endpoints. In general, we should not expose domain objects directly to clientside. Therefore, mappers are used to convert domain entities to viewmodels and return only needed data for clientside. This layer depends on core (domain model layer) to use the business services, entity objects, repositories (ideally through dependency injection). From interfaces of repositories in domain model layer, application layer can use DI (dependency injection) to get the implementations from infrastructure layer.
 
-**Infrastructure Layer** depends on domain model layer to use entities and repository contracts and interfaces. This layer contains actual implementation of repositories. By this separation, it will be easy to switch external dependencies (e.g. change MySQL server to MongoDB, or add caching layer for external dependencies). As described above, application layer can refer to this layer for injecting repository implementations. In practice, Infrastructure layer often has a caching layer to improve speed when accessing external services.
+**Infrastructure Layer** depends on domain model layer to use entities and repository contracts and interfaces. This layer contains actual implementation of repositories. By this separation, it will be easy to switch external dependencies (e.g. change MySQL server to MongoDB by having multiple implementations of same repository contract). As described above, application layer can refer to this layer for injecting repository implementations. In practice, Infrastructure layer often has a caching layer to improve speed when accessing external services.
 
 This DDD architecture is language agnostic, it can be applied in many programming languages such as C#, Java, Scala, or even Nodejs. Nodejs run on Javascript engine and doesn't have typecheck (i.e interfaces), but the structure can still be used for separation of concerns. In my opinion this structure makes more sense than the clean architecture (or Onion architecture).
 
 ### 3. Clean architecture (Onion architecture)
 
-In Uncle Bob blog for clean architecture, he describe API systems should have dependencies flow inwards. Inner layers should not know any thing about outer ones. That structure still maintain the separation of concerns for each layer and follow the dependency inversion principals. To compare DDD for micro service and the Onion architecture, Let's see them together in the following picture:
+In Uncle Bob blog for clean architecture, he describes API systems should have dependencies flow inwards. Inner layers should not know any thing about outer ones. That structure maintains the separation of concerns for each layer and follow the dependency inversion principal. To compare DDD for microservice and the Onion architecture, Let's see them together in the following picture:
 
 ![Clean architecture vs DDD](./clean-ddd.png)
 <center>Figure 2: Clean architecture and Domain driven design</center> <br/>
 
-As you can see in Figure 2, after redrawing DDD in onion styles, we see an incorrect point of Clean architecture is that, when using dependencies injection, the application layer in fact need to have reference to infrastructure layer for repository implementations. Clean architecture still has good points to ensure separation of concerns and dependency inversion. But in practise, I think it's not completely correct in terms of dependencies between outer layers and inside ones.
+As you can see in Figure 2, the core of clean architecture is entities, which is equivalent to domain modal layer in DDD architecture. The difference in clean architecture is it splits application business logic into another layer in `uses cases`, while in DDD approach business rules are still in domain model layer. Application layer in DDD can be mapped to `Controllers`, `Gateways` and `Presenter` in clean architecture. The outer most layer in clean architecture consists of external frameworks, actual implementation of repositories, loggings...etc.
 
-### 4. Microservice gateway pattern
+After redrawing DDD in onion style, we see an *incomplete point of Clean architecture* is that, when using dependencies injection, the application layer in fact needs to have reference to infrastructure layer for repository implementations. Clean architecture still has good points to ensure separation of concerns and dependency inversion. But in practise, I think it's not fully reflect the dependencies between outer layers and inside ones.
 
-In large applications with many micro services, they usually employ and intermediate api gateway layer to incooporate relevant micro services together as following picture:
+### 4. Gateway pattern
+
+In large applications with many microservices, they usually employ and intermediate api gateway layer to incooporate relevant microservices . Example architecture as following picture:
 
 ![micro service pattern](./microservice-pattern.png)
 
-<center>Figure 3: API gateway pattern</center> <br/>
+<center>Figure 3: API gateway</center> <br/>
 
-In the example, each clients (e.g mobile or desktop) has a separate api gateway layer. Api gateway handle requests from clientside then compose `account`, `inventory` and `shiping` service to process requests.
+In the example, each client (e.g mobile or desktop) has a separate api gateway layer. Api gateway handle requests from clientside then compose `account`, `inventory` and `shiping` service to process requests.
 
-Api gateway layer provides additional abstraction layer which help sclients interact with api services easier. Different type of clients can have different api gateway endpoints in order to return only needed data for clientside (backend for frontend approach).
+Gateway layer provides additional abstraction layer which helps clients interact with api services in higher level of actions or commands. For example, gateway layer can have generic endpoint like `booking`. When clients send requests to the endpoint, it will then based on business logic to dispatch smaller requests to `account`, `inventory` and `shiping` services. The results of smaller requests from sub-services are joined together in gateway layer to yield final result to frontend. Different types of frontend clients can have different gateway endpoints in order to return only needed data for clientside (backend for frontend approach).
 
-### 5. Message queuing architecture
+### 5. Message queue architecture
 
-In Api services that require long operations (e.g payment, reservation api), to ensure the scalability in these systems, meassage queuing is often employed. The main concept of this architecture is similar to asynchronous actions, when receive a request, api service just push them in a First-in-first-out queue. Sub-services will then subscribe to the queue and start to process each request. An example in following picture
+In api services that require long operations (e.g payment, reservation api), meassage queue is a common approach to ensure the scalability in these systems. The main concept of this architecture is similar to asynchronous actions. When receive a request, api service just pushes them in a First-in-first-out queue. Sub-services that subscribe to the queue will then start to process each request. An example architecture is in following picture
 
 ![message queue architecture](./message-queue.png)
 <center>Figure 4: Message queue architecture</center> <br/>
 
-A main api service (e.g. api gateway layer) can receive requests then publish messages into multiple queues, after that the smaller micro services can subscribe to corresponding queue and process requests from the queue. When systems have heavy traffic from frontend, they can deploy more instances of `microservice A` and `microservice B` accordingly. This architecture unblock resources both on client and server side, while waiting for messages to be processed by sub-systems, servers can handle other requests.
+RabitMQ is one of the technologies that implements message queue architecture. In the example, a main api service (e.g. gateway layer) receives requests then publish messages into multiple queues. After that smaller micro services get the messages from the corresponding queue and process them. When systems have heavy traffic from frontend, they can deploy more instances of `microservice A` and `microservice B` accordingly. This architecture unblocks resources both on client and server side. While waiting for messages to be processed by sub-systems, servers can handle other requests.
 
 ### 6. Summary
 
-Domain driven design for microservice is widely used to structure api applications. Besides the benefits of smoother communication between technical and domain experts, DDD and clean architecture ensure the separation of concerns and dependency inversion principal for api systems. Those characteristics help maintain and develop api system easier. In large applications, a gateway layer or message queue can be used to provide more abstraction layer and increase the scalability for applications. 
+Domain driven design for microservice is widely used to structure api applications. Besides the benefits of smoother communication between technical and domain experts, DDD and clean architecture ensure separation of concerns and dependency inversion principals for api systems. Those characteristics help maintain and develop api systems easier. In large applications, a gateway layer or message queue can be used to provide more abstraction layer and increase the scalability for applications. 
 
 ### References
 
