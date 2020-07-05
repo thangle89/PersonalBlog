@@ -1,7 +1,7 @@
 ---
 title: Common server architectures for microservice
 date: "2020-07-06T22:12:03.284Z"
-description: "Analyze Domain driven design and clean architecture for microservice. Describe common microservice patterns"
+description: "Analyze domain driven design and clean architecture for microservice. Describe common microservice patterns"
 keywords: "design patterns, software designs, API architecture"
 featured: "./clean-ddd.png"
 ---
@@ -40,7 +40,7 @@ After redrawing DDD in onion style, we see an *incomplete point of Clean archite
 
 ### 4. Gateway pattern
 
-In large applications with many microservices, they usually employ and intermediate api gateway layer to incooporate relevant microservices . Example architecture as following picture:
+In large applications with many microservices, they usually employ and intermediate api gateway layer to incooporate relevant microservices . Example architecture as following:
 
 ![micro service pattern](./microservice-pattern.png)
 
@@ -48,11 +48,11 @@ In large applications with many microservices, they usually employ and intermedi
 
 In the example, each client (e.g mobile or desktop) has a separate api gateway layer. Api gateway handle requests from clientside then compose `account`, `inventory` and `shiping` service to process requests.
 
-Gateway layer provides additional abstraction layer which helps clients interact with api services in higher level of actions or commands. For example, gateway layer can have generic endpoint like `booking`. When clients send requests to the endpoint, it will then based on business logic to dispatch smaller requests to `account`, `inventory` and `shiping` services. The results of smaller requests from sub-services are joined together in gateway layer to yield final result to frontend. Different types of frontend clients can have different gateway endpoints in order to return only needed data for clientside (backend for frontend approach).
+Gateway provides additional abstraction layer which helps clients interact with api services in higher level of actions or commands. For example, gateway can have generic endpoint like `booking`. When clients send requests to the endpoint, it will then based on business logic to dispatch smaller requests to `account`, `inventory` and `shiping` services. The results of smaller requests from sub-services are joined together in gateway layer to yield final result to frontend. Different types of frontend clients can have different gateway endpoints in order to return only needed data for clientside (backend for frontend approach).
 
 ### 5. Message queue architecture
 
-In api services that require long operations (e.g payment, reservation api), meassage queue is a common approach to ensure the scalability in these systems. The main concept of this architecture is similar to asynchronous actions. When receive a request, api service just pushes them in a First-in-first-out queue. Sub-services that subscribe to the queue will then start to process each request. An example architecture is in following picture
+In api services that require long operations (e.g payment, reservation api), meassage queue is a common approach to ensure the scalability in these systems. The main concept of this architecture is similar to asynchronous actions. When receive a request, api service just pushes them in a FIFO (first in first out) queue. Sub-services that subscribe to the queue will then start to process each request. An example architecture is as following:
 
 ![message queue architecture](./message-queue.png)
 <center>Figure 4: Message queue architecture</center> <br/>
@@ -61,7 +61,7 @@ RabitMQ is one of the technologies that implements message queue architecture. I
 
 ### 6. Summary
 
-Domain driven design for microservice is widely used to structure api applications. Besides the benefits of smoother communication between technical and domain experts, DDD and clean architecture ensure separation of concerns and dependency inversion principals for api systems. Those characteristics help maintain and develop api systems easier. In large applications, a gateway layer or message queue can be used to provide more abstraction layer and increase the scalability for applications. 
+Domain driven design for microservice is widely used to structure api applications. Besides the benefits of smoother communication between technical and domain experts, DDD and clean architecture ensure separation of concerns and dependency inversion principals for api systems. Those characteristics help maintain and develop api systems easier. In large applications, a gateway layer or message queue can be used to provide additional abstraction layer and increase the scalability for applications. 
 
 ### References
 
