@@ -22,6 +22,4 @@ working primarily with web development, my current company is Agoda, an online t
 
 My main interest is solving complex problems with simple and elegant solutions. I've become a big fan of functional programming and micro services.
 
-**P/S**: please excuse my grammar mistake if any, still trying to improve it :)
-
 ![Thailand beach](./thailand-beach.png)
