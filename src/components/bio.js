@@ -57,7 +57,7 @@ const Bio = () => {
         }}
       />
       <p>
-        Written by <strong>{author.name}</strong> {author.summary}
+        Written by <strong>{author.name}</strong>. I also offer free coaching, check out on <a target="_blank" href="https://github.com/thangle89/coaching">Github</a>
       </p>
     </div>
   )
