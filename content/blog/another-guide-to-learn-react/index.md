@@ -3,6 +3,7 @@ title: Another guide to learn React
 date: "2020-08-09T22:12:03.284Z"
 description: "Analyse design patterns in React framework"
 keywords: "javascript, react, design patterns, software principals"
+featured: "./react-flow.png"
 ---
 
 ### 1. Introduction
