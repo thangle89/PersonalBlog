@@ -3,7 +3,7 @@ title: Domain driven design for clientside application
 date: "2020-11-05T22:12:03.284Z"
 description: "clientside architecture for multiple domains application"
 keywords: "architecture, domain driven design, react, redux"
-featured: "./DDD.PNG"
+featured: "./clientDDD.png"
 ---
 
 ### 1. Introduction
@@ -17,17 +17,19 @@ Definition of DDD on Wikipedia
 >Domain-driven design is the concept that the structure and language of software code should match the business domain. (Wikipedia)
 
 We can see more details in following example [picture](https://martinfowler.com/bliki/BoundedContext.html): 
-![Domain driven design for microservice](./DDD.png)
+![Domain driven design](./DDD.png)
 
 One prominent application of DDD is in clean architecture which I described in the previous [post](https://thangledev.com/common-server-architectures-for-micro-serivce). Apply DDD correctly, we can gain a lot of benefits in developing applications. 
 
 ### 3. Why do we need DDD for clientside
-- maintain domain knowledge
-- keep flat complexity
+
+The fact that Javascript supports both function and object oriented programming is actually making it harder for developers to decide whether they should use a small helper function or a method of a class. In my experience I see most of people prefer small, quick function in javascript to complete their tasks. It is the main reason why domain knowlege get scatter to many places. Then it's harder for the next maintainer of the project to understand all of that knowledge. DDD is pefect solution for that. Using DDD can help us to put all relevant knowledge into a one place. Thus it will be easier to maintain and keep application complexity under control.  
+- example 
 
 ### 4. DDD for clientside
--what unique on clientside DDD
--illustration picture of all components (layer) 
--illustration picture of folder structure
--when application grow, how is the complexity is kept constant
+This is an opinionated way to apply DDD for clientside, I would love to hear if you find any problem or have better idea.
+![Domain driven design for clientside](./clientDDD.png)
+
+-description
+
 ### 5. Summary
