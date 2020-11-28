@@ -44,7 +44,7 @@ Feature or Page is an aggregate of domains. For example in check out page of Ago
 
 - Application base
 
-For application to work, there are other necessary parts like `Infrastructure`, which contains services such as ajax, logging. Everything that needs to boostrap the application. Application may also have `Utilites` for helper functions for `date` and `string` for instance.
+For application to work, there are other necessary parts like `Infrastructure`, which contains services such as ajax, logging. Everything that needs to boostrap the application. Application may also have `Utilites` for helper functions e.g `date` and `string` helpers.
 
 
 ### What do you think ?
