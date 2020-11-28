@@ -3,7 +3,7 @@ title: Domain driven design for clientside application
 date: "2020-11-28T22:12:03.284Z"
 description: "clientside architecture for multiple domains application"
 keywords: "architecture, domain driven design, react, redux"
-featured: "./clientDdd.png"
+featured: "./clientDDD.png"
 ---
 
 ### Introduction
@@ -26,7 +26,7 @@ The fact that Javascript supports both function and object oriented programming 
 ### DDD for clientside
 
 Clienside development usually contains an ecosystem of libraries. e.g. React, Redux, styled-component, Apolo client, etc. The following picture describes the application structure with DDD principle. 
-![Domain driven design for clientside](./clientDdd.png)
+![Domain driven design for clientside](./clientDDD.png)
 
 - Domain Component vs Pure UI Component
 
