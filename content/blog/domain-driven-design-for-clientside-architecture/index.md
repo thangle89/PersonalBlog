@@ -30,7 +30,7 @@ Clienside development usually contains an ecosystem of libraries. e.g. React, Re
 
 - Domain Component vs Pure UI Component
 
-The name already suggested the idea of `Pure UI component`, it is used for small, dump UI component that can be re-used in many places. Within `Pure UI` area, components can be `Element` or `Layout`. `Element` is a single independent component such as: Button, dropdown, icons... while `Layout` usually composes many `Elements` and put them in the same `Layout`. `Logic` in `Pure UI component` is any logic you may have for that UI part e.g. React hooks, setTimeout, debounce logic...
+The name already suggested the idea of `Pure UI component`, it is used for small, dumb UI component that can be re-used in many places. Within `Pure UI` area, components can be `Element` or `Layout`. `Element` is a single independent component such as: Button, dropdown, icons... while `Layout` usually composes many `Elements` and put them in the same `Layout`. `Logic` in `Pure UI component` is any logic you may have for that UI part e.g. React hooks, setTimeout, debounce logic...
 
 The similar idea is also applied for `Domain Component`, it can have `Element`, `Layout` and `Logic`. `Domain component` consists of many `Pure UI` components. `Layout` in `Domain Component` can be considered as container components that handle all the logic and keep `Element` components pure.
 
