@@ -46,6 +46,8 @@ Feature or Page is an aggregate of domains. For example in check out page of Ago
 
 For application to work, there are other necessary parts like `Infrastructure`, which contains services such as ajax, logging. Everything that needs to boostrap the application. Application may also have `Utilites` for helper functions e.g `date` and `string` helpers.
 
+### Conclusion
 
-### What do you think ?
-This is an opinionated way to apply DDD for clientside, I would love to hear if you find any problem or have better idea.
+Organizing code as features helps developers quickly find and remember the location of files, they do not need to jump into many places to edit. This will reduce the mental overhead of memorizing the implementation for the features. Most importantly, all the domain knowledge is kept and maintain easily.
+
+I hope this post can increase your awareness for domain driven design on clientside. Happy coding :)
