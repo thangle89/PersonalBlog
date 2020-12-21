@@ -14,10 +14,10 @@ The pattern, by its name, is a style of programming in which an application subs
 
 ![Observer pattern](./observer.png)
 
-There a two main component in the picture: `Subject` and `Listener`, or `Observerable` and `observer` as called in [Rxjs](http://reactivex.io/). The observable can be seen as a wrapper for some asynchronous operations that may have an stream of data. What observable does is encapsulate that data let all observers knows when the data is ready. Observable has an interface i.e. `subscribe` or `on` to let observers register their handlers. 
+There are two main components in the picture: `Subject` and `Listener`, or `Observable` and `observer` as called in [RxJS](http://reactivex.io/). The observable can be seen as a wrapper for some asynchronous operations that may have an stream of data. What observable does is encapsulate that data let all observers knows when the data is ready. Observable has an interface i.e. `subscribe` or `on` to let observers register their handlers. 
 
 ### Event Emitter
-Let us see an example using `Event Emitter` from Nodejs and implement observer pattern for a file reading action.
+Let us see an example using `EventEmitter` from Nodejs and implement observer pattern for a file reading action.
 ```js
     const events = require('events');
     const fs = require('fs');
@@ -39,15 +39,54 @@ The key thing to notice here is how `readFileEvent` create a wrapper i.e. event 
 ```js
     const dataReader = readFileEvent('.\\bookings.json');
     const bookingSummaryListener = dataReader.on('data', renderData);
-    const logListener = dataReader.on('error', logError);
+    const logListener = dataReader.on('error', logError); 
 ```
 
 As we can see here, a subject can be subscribed from many different listeners. In the example two listeners subscribe to different events on the subject. This is the true power of observer pattern, it wraps an asynchronous action and notify all listeners when certain events happen. 
 
 ### Promise
 
-Most of the usecases in asynchronous flow require only success and failure events. The `Promise` object in javascript is built to fullfill that usecase. For the same example, we can update the implementation using `Promise`
+Most of the usecases in asynchronous flow require only `success` and `failure` events. The `Promise` object in javascript is built to fullfill that usecase. For the same example, we can update the implementation using `Promise`
 ```js
+function readFileEvent(fileName) {
+        return new Promise((resolve, reject) => {
+                fs.readFile(fileName, 'utf8', (error, data) => {
+                if(error) {
+                    reject(error);
+                }
+                resolve(data);
+            });
+        })
+    }
+// ...
+readFileEvent('.\\bookings.json')
+            .then(renderData)
+            .catch(logError);
 ```
 
-### RxJs
+Usecase of `Promise` is very similar to `EventEmitter`, however there is often only one client that subscribe to a promise, as opposed to many clients for event emitter.
+
+### RxJS
+
+Both examples above showing clearly the application of observer pattern in asynchronous flow. What happen when the asynchronous flow contains a streaming of data or events ? That is why people create `RxJS` to handle these cases. A very simple example with [RxJS](https://rxjs-dev.firebaseapp.com/guide/overview):
+
+```js
+    import { fromEvent } from 'rxjs';
+    import { throttleTime, map, scan } from 'rxjs/operators';
+
+    fromEvent(document, 'click')
+    .pipe( // wrapper of the asynchronous flows
+        throttleTime(1000),
+        map(event => event.clientX),
+        scan((count, clientX) => count + clientX, 0)
+    )
+    .subscribe(count => console.log(count)); // handle subscription
+```
+In the example, an observable is created from document click event. The power of `RxJS` come from its operators with which we can compose many type of transformation for the event e.g throttle, map, scan. The end result of these operators is another observable. The `subscribe` function is very similar to `Promise` where client can provide `onNext`, `onComplete` or `onError` for the observable. 
+
+### Final thoughts
+
+It depends on each usecase to decide where you should use `EventEmitter`, `Promise` or `RxJS` or a combination of them. Essentially, they are different forms of observer pattern and very suitable to use in asynchronous flow. 
+
+Happy learning :) 
+
