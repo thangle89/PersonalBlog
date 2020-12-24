@@ -68,7 +68,7 @@ Usecase of `Promise` is very similar to `EventEmitter`, however there is often o
 
 ### RxJS
 
-Both examples above showing clearly the application of observer pattern in asynchronous flow. What happen when the asynchronous flow contains a streaming of data or events ? That is why people create `RxJS` to handle these cases. A very simple example with [RxJS](https://rxjs-dev.firebaseapp.com/guide/overview):
+Both examples above clearly shows the application of observer pattern in asynchronous flow. What happen when the asynchronous flow contains a stream of data or events ? The answer for that question is why people create `RxJS`. A very simple example with [RxJS](https://rxjs-dev.firebaseapp.com/guide/overview):
 
 ```js
     import { fromEvent } from 'rxjs';
