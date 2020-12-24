@@ -1,12 +1,12 @@
 ---
-title: Observer pattern and its variations
-date: '2020-12-28T22:12:03.284Z'
-description: Distill observer pattern and compare its usages
+title: Observer pattern and its application in javascript
+date: '2020-12-24T22:12:03.284Z'
+description: Distill observer pattern and compare some usages in js
 keywords: programming, design pattern, nodejs, javascript, rxjs
 featured: ./observer.png
 ---
 
-In functional programming, there are two important concepts: composition and asynchronous flow. Observer pattern, I figured, is the best pattern to describe the asynchronous flow in functional programming. When I tried to learn the pattern, it was a bit difficult to grasp the concept because diferrent materials use different terminologies. Thus in this post, I aim to unify and give you the essence of the pattern, then compare its uages in a number of javascript implementations. 
+In functional programming, there are two important concepts: composition and asynchronous flow. Observer pattern, I figured, is the best pattern to describe the asynchronous flow in functional programming. When I learned the pattern, it was a bit difficult to grasp the concept because different materials use different terminologies. Thus in this post, I aim to unify and give you the essence of the pattern, then compare its usages in a number of javascript implementations. 
 
 ### What is observer pattern about ?
 
@@ -14,7 +14,7 @@ The pattern, by its name, is a style of programming in which an application subs
 
 ![Observer pattern](./observer.png)
 
-There are two main components in the picture: `Subject` and `Listener`, or `Observable` and `observer` as called in [RxJS](http://reactivex.io/). The observable can be seen as a wrapper for some asynchronous operations that may have an stream of data. What observable does is encapsulate that data let all observers knows when the data is ready. Observable has an interface i.e. `subscribe` or `on` to let observers register their handlers. 
+There are two main components in the picture: `Subject` and `Listener`, or `Observable` and `observer` as called in [RxJS](http://reactivex.io/). The observable can be seen as a wrapper for some asynchronous operations that may have a stream of data. What observable does is encapsulate that data let all observers knows when the data is ready. Observable has an interface i.e. `subscribe` or `on` to let observers register their handlers. 
 
 ### Event Emitter
 Let us see an example using `EventEmitter` from Nodejs and implement observer pattern for a file reading action.
