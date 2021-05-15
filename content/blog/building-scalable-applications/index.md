@@ -3,27 +3,30 @@ title: Building scalable applications
 date: '2021-05-30T22:12:03.284Z'
 description: All aspects to consider for application scalability 
 keywords: application architecture, service discovery, consul, microservice
-# featured: ./clientDDD.png
+featured: ./system-architecture.png
 ---
 
 >There is nothing new except what has been forgotten.
 >
 >-- Marie Antoinette
 
-At the start of software developer career, most programmers focus on learning technologies, algorithms, languages...etc, to be able to land a good job. At some points later, there will be need to design applications from scratch. That raises a question within me: `"How ones can design and build a highly scalable application"`. Reading a few books on the subject will certainly get you realized that: there is not many innovative architectures in software engineering that you couldn't grasp onto the ideas. In this blog I want to highlight all important aspects in architecture, development and monitoring for these applications. 
+At the start of software developer career, most programmers focus on learning technologies, algorithms, languages...etc, to be able to land a good job. At some points later, there will be need to design applications from scratch. . Reading a few books on the subject will certainly get you realized that: there is not many innovative architectures in software engineering that you couldn't understand their ideas. In this blog I want to highlight some important aspects in architecture, development and monitoring for these applications. 
 
 ### Architecture
-The ultimate goal of an application is to make profits for company. Thus, cost and resources are always the first factors in designing process. As a result, many companies opt for cloud infrastruture due to the ability to scale seemlessly. Inevitably, big applications frequently involves microservices. A typical architecture to represent these technologies as following:
+The ultimate goal of an application is to make profits for company. Thus, cost and resources are always the first priority in designing process. As a result, many companies prefer cloud infrastruture due to the ability to scale seemlessly. Inevitably, big applications frequently involves microservices. A typical architecture to represent these technologies as following:
 
  <!-- TODO: overall architecture -->
+ ![System architecture](./system-architecture.png) 
+*<center>System architecture</center>*
+
+In customer facing web application, generally 
+
 
 #### Load balancing (LB)
 LB is a popular terms in cloud infrastructure. In fact, it is a critical component in the system. LB handles all traffic and make sure all servers receive equal amount of network requests. Large scale applications often have one LB sit in front of all main web servers. However, using LB proves to have many problems in backend systems. 
 
- <!-- TODO: service connect with LB and without LB -->
-
 In microservice, LB introduces additional layer which creates single point of failures. When serviceA connect to serviceB through LB, it will have higher latency than the twos connect directly with each other. A common approach nowadays to solve the issues is service discovery. 
- 
+ #### Service discovery
   <!-- TODO: apps with service discovery -->
 Each service, before sending request to other services, needs to request for the list of available servers. After this `"discovering phase"`, the services can send requests to each other. The list of available servers is updated periodically and each server also update its status when necessary.
 
@@ -48,5 +51,9 @@ Design as best as you can, systems will go down at some point in time due to var
 The 4-dimention that any microservice should be monitoring are as following:
 <!-- TODO: 4 dimention monitoring -->
 
+For complex service, it should have oncall who reponsible on the day and sufficient guide for handling production alerts. One important step for the oncall is log and record a post mortem to analyse incidents.
+
 
 ### Final thoughts
+
+It is useful to have a complete picture in developing large scale systems. I hope this article give you more perspectives and direction to research deeper to each area.
