@@ -1,8 +1,8 @@
 ---
 title: Building scalable applications 
-date: '2021-05-30T22:12:03.284Z'
+date: '2021-05-26T22:12:03.284Z'
 description: All aspects to consider for application scalability 
-keywords: application architecture, service discovery, consul, microservice
+keywords: application architecture, service discovery, microservice
 featured: ./system-architecture.png
 ---
 
